@@ -61,6 +61,9 @@
   .pill { display: inline-block; font-size: .74rem; font-weight: 800; padding: 3px 9px; border-radius: 99px; letter-spacing: .02em; }
   .pill.hi { background: var(--hi-soft); color: var(--hi); } .pill.mid { background: var(--mid-soft); color: var(--mid); } .pill.lo { background: var(--lo-soft); color: var(--lo); }
   .pill.blue { background: var(--accent-soft); color: var(--accent); }
+  .pill.vibe { background: #f3e8ff; color: #6b2fa3; text-transform: uppercase; font-size: .66rem; vertical-align: 2px; }
+  @media (prefers-color-scheme: dark) { .pill.vibe { background: #3a2550; color: #e2c8ff; } }
+  .tw.hook { font-weight: 600; }
   table { width: 100%; border-collapse: collapse; font-size: .92rem; }
   th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--border); }
   th { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
@@ -215,6 +218,7 @@
 </div>
 
 <footer>
+  <p style="margin-top:0"><strong>Where these designs come from.</strong> Several designs adapt published ideas: the AI Assignment Flip examples; Texas A&amp;M University, <a href="https://ai.tamu.edu/teach-with-ai/assignment-ideas.html">Assignment Ideas</a>; Michael Feldstein, <a href="https://eliterate.us/how-to-chatgpt-proof-analysis-assignments/">How to ChatGPT-proof Analysis Assignments</a> (e-Literate, 2023); the <a href="https://aipedagogy.org/assignments/">AI Pedagogy Project</a> assignment collection; and UCLA HumTech, <a href="https://humtech.ucla.edu/instructional-support/ai-toolkit-for-the-humanities-classroom/designing-writing-assignments-to-work-with-ai/">Designing Writing Assignments to Work with AI</a>. Each design card names its source.</p>
   Built for the Workshop-in-a-Box "Beyond AI Detection: Redesigning Authentic Assessments for the GenAI Era," by Molly Barra and Cynthia McGinnis, USM Generative AI Pedagogy Fellowship Program, 2026-2027. Draft. The analysis is rule-based and suggests designs; it does not make any assessment secure or prove who did the work.
 </footer>
 </div>
@@ -301,8 +305,9 @@
       grade: "Errors found and correctly explained. Extra credit for real errors GenAI added by accident.",
       nogen: "The same: you generate the response once and give it to every student.",
       watch: "GenAI sometimes adds unplanned errors or fails to plant one. Check the key.",
+      src: "Peer-Review Partner Flip, from the AI Assignment Flip examples; critiquing AI responses, UCLA HumTech.",
       lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 3, Evaluate: 4, Create: 0 }, prod: { essay: 3, problems: 1, lab: 2, code: 2, case: 1, discussion: 1, data: 1 }, quant: 0 },
-    { id: "breakbot", name: "Break the bot", short: "Students find a question GenAI answers confidently but wrongly, and explain why it failed.",
+    { id: "breakbot", name: "Stump the bot", short: "Students find a question GenAI answers confidently but wrongly, and explain why it failed.",
       why: "To make GenAI fail, students must know where the topic gets subtle: edge cases, misconceptions, and conditions where a rule breaks.",
       steps: ["Students try course-topic questions until GenAI gives a confident wrong or misleading answer.", "They establish the correct answer from course materials or reliable sources.", "They explain what went wrong and why GenAI likely failed."],
       prompt: "Answer as an expert in {discipline}. Show your reasoning step by step\nand state how confident you are in your answer.\n\nQuestion: [student's question about: {outcome}]",
@@ -319,6 +324,7 @@
       grade: "Disciplinary precision of the prompt and quality of the evaluation, not GenAI's polish.",
       nogen: "Students write the prompt and criteria; you run it and return the output.",
       watch: "Require course-specific criteria so students cannot copy generic prompt formulas.",
+      src: "Crafting diverse prompts, UCLA HumTech.",
       lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 3, Create: 4 }, prod: { essay: 2, proposal: 3, presentation: 1, code: 1 }, quant: 0 },
     { id: "grade", name: "Grade the bot", short: "Students score several GenAI-written submissions with your rubric; you grade their grading.",
       why: "Applying a rubric forces students to understand what quality looks like in your course, and comparing their scores with yours shows where their sense of quality is off.",
@@ -328,6 +334,7 @@
       grade: "Accuracy and justification of scores, especially on the weak but polished response.",
       nogen: "The same: you supply the three responses.",
       watch: "Check the key. The 'excellent' response is not always excellent.",
+      src: "Paper Flip and Peer-Review Partner Flip, from the AI Assignment Flip examples.",
       lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 4, Create: 0 }, prod: { essay: 3, discussion: 2, lab: 1, presentation: 1, proposal: 1, reflection: 1 }, quant: 0 },
     { id: "disagree", name: "When the models disagree", short: "Students ask two GenAI tools the same question and settle the differences with evidence.",
       why: "Disagreement shows that GenAI output is generated, not looked up, and settling it requires weighing claims against sources.",
@@ -337,6 +344,7 @@
       grade: "Whether students find meaningful differences and resolve them with credible evidence.",
       nogen: "You supply two pre-generated answers.",
       watch: "Both answers can agree and both be wrong. Ask students to check one shared claim too.",
+      src: "Double Paper Flip, from the AI Assignment Flip examples.",
       lv: { Remember: 1, Understand: 1, Apply: 0, Analyze: 3, Evaluate: 3, Create: 0 }, prod: { bibliography: 2, discussion: 2, case: 1, essay: 1 }, quant: 0 },
     { id: "verify", name: "Verify the sources", short: "GenAI produces sources or claims; students check each one, flag inventions, and replace them.",
       why: "GenAI can invent sources that look real, so verification exercises exactly the judgment research assignments are meant to build.",
@@ -346,6 +354,7 @@
       grade: "Thoroughness of verification and the quality of the credibility reasoning.",
       nogen: "You supply one pre-generated bibliography for the class to verify.",
       watch: "Limit the number of sources; verification takes time. Make sure students can reach library databases.",
+      src: "AI Fact-Checking Challenge, Texas A&M; fact-checking AI sources, UCLA HumTech; Building an Annotated Bibliography with AI Assistance, AI Pedagogy Project.",
       lv: { Remember: 1, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 3, Create: 0 }, prod: { bibliography: 5, essay: 1 }, quant: 0 },
     { id: "predict", name: "Predict, then prompt", short: "Students predict what GenAI will get wrong, submit the prediction, then compare.",
       why: "Predicting forces students to reason about the problem and about GenAI's weaknesses; the gap between prediction and result becomes reflection.",
@@ -364,11 +373,12 @@
       grade: "The rebuttal: how well students answer the strongest objections and what they concede, not the GenAI case.",
       nogen: "You supply an opposing case for each common position, or classmates write them.",
       watch: "GenAI may produce a weak straw man. Ask for the strongest version, and check its evidence claims.",
+      src: "AI-Human Debates, Texas A&M; AI Debater's Delight, from the AI Assignment Flip examples.",
       lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 4, Create: 2 }, prod: { debate: 5, essay: 2, discussion: 2, proposal: 1, presentation: 1 }, quant: 0 },
     { id: "skeptic", name: "Face the skeptic", short: "GenAI plays a demanding professional stakeholder, such as a reviewer, client, or patient's family member, who challenges the student's work or responses.",
       why: "Students defend their reasoning, decide which objections are valid, and revise; the memo shows judgment more clearly than the proposal alone.",
       steps: ["Students prepare a proposal, argument, or plan for a professional conversation.", "GenAI plays the stakeholder and raises challenges one at a time; students respond to each.", "Students revise and write a memo on what they changed, defended, and why."],
-      prompt: "You are a [professional role in {discipline}, e.g., reviewer, manager,\nclient] reviewing the work below. Raise the three strongest objections\nsomeone in your role would raise, one at a time. After each of my\nresponses, say whether it resolves the objection and why. Do not\nrewrite my work.\n\nWork: [student's proposal or argument]",
+      prompt: "You are {boss}, reviewing my {thing} below. Raise the three strongest objections\nsomeone in your role would raise, one at a time. After each of my\nresponses, say whether it resolves the objection and why. Do not\nrewrite my work.\n\nMy {thing}: [paste your work, without names or private details]",
       submit: "An excerpt of the exchange, the revised work, and the memo.",
       grade: "The memo: which objections were accepted or rejected, and how well each choice is justified.",
       nogen: "A classmate or the instructor raises written objections in a discussion post.",
@@ -377,16 +387,17 @@
     { id: "coach", name: "Draft, get coached, decide", short: "Students draft first; GenAI gives feedback against the assignment's criteria; students accept or reject each point with a reason.",
       why: "Students must judge feedback instead of absorbing it. Deciding which suggestions make their own work better, and explaining why, is the critical thinking; the draft stays theirs.",
       steps: ["Students complete a first draft on their own.", "They paste the draft, with names and private details removed, into GenAI with a prompt that asks for feedback against the assignment's criteria.", "For each feedback point they accept, adapt, or reject it with a reason, then revise."],
-      prompt: "You are a demanding but supportive coach for a {level} course in\n{discipline}. Give feedback on my draft below using ONLY these criteria:\n[paste the assignment's criteria, e.g., Specific, Measurable,\nAchievable, Relevant, Time-bound]\nFor each criterion, say what is strong, what is weak, and ask one\nquestion that would push me to improve it. Do NOT rewrite my draft.\n\nMy draft: [paste your draft, without names or private details]",
+      prompt: "You are a demanding but supportive coach for a {level} course in\n{discipline}. Give feedback on my draft below using ONLY these criteria:\n{criteria}\nFor each criterion, say what is strong, what is weak, and ask one\nquestion that would push me to improve it. Do NOT rewrite my draft.\n\nMy draft: [paste your draft, without names or private details]",
       submit: "The first draft, the GenAI feedback, a decision table (each point accepted, adapted, or rejected, with a reason), and the revised work.",
       grade: "The decision table and the quality of the revision. Rejecting weak feedback with a good reason earns as much as accepting strong feedback.",
       nogen: "A classmate or the instructor gives feedback against the same criteria; students make the same decisions.",
       watch: "Students choose what to share. Personal goals and values stay private unless the student decides otherwise; they can paste a generalized version.",
+      src: "AI Peer Review, from the AI Assignment Flip examples; revising with AI, UCLA HumTech; AI-Enhanced Peer Review, Texas A&M.",
       lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 2, Evaluate: 4, Create: 3 }, prod: { goals: 5, reflection: 3, proposal: 2, essay: 2, presentation: 1 }, quant: 0 },
     { id: "generic", name: "Generic versus mine", short: "GenAI writes a generic example; students explain what makes it generic, then write their own and show how it reflects them.",
       why: "GenAI produces the average answer. Seeing why the average does not fit their own life, values, or context forces students to make their work specific and personal, which is the point of reflective assignments.",
       steps: ["Students have GenAI write a generic example of the product, for a typical student.", "They annotate it: what is vague, unrealistic, or untrue for them, and why.", "They write their own version and explain how it reflects their values, circumstances, and evidence."],
-      prompt: "Write an example of the following for a typical {level} student in\n{discipline}: [the product, e.g., a SMART goal for academic achievement,\nwith three action items]. Make it sound reasonable but general.\nDo not ask me any questions about myself.",
+      prompt: "Write an example of the following for a typical {level} student in\n{discipline}: {generic_ask}. Make it sound reasonable but general.\nDo not ask me any questions about myself.",
       submit: "The generic example with annotations, the student's own version, and a short explanation of the differences.",
       grade: "The annotations and the explanation: how clearly students show what makes their version specific to them.",
       nogen: "The instructor supplies one generic example for the class.",
@@ -400,8 +411,194 @@
       grade: "The audit's statistical evidence and the analysis done without GenAI.",
       nogen: "You generate the dataset from the student's scenario.",
       watch: "Generated data is for learning only; students must not present it as real research data.",
-      lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 3, Evaluate: 2, Create: 1 }, prod: { data: 5, lab: 2 }, quant: 2 }
+      src: "Data Analysis with AI, Texas A&M.",
+      lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 3, Evaluate: 2, Create: 1 }, prod: { data: 5, lab: 2 }, quant: 2 },
+    { id: "hotseat", name: "The hot seat", short: "GenAI plays a demanding professional who interviews the student about their work, one question at a time. The student answers in their own words, then judges which answers held up.",
+      why: "Answering follow-up questions without a script shows whether the student understands and owns the work. Reviewing the transcript turns the interview into self-assessment.",
+      steps: ["Students complete the original task.", "They paste it into GenAI with the interview prompt and answer five questions in their own words, without GenAI help.", "They mark their strongest and weakest answers, explain why, and revise the work where the interview exposed a gap."],
+      prompt: "Stay in role as {boss}. Interview me about my {thing}, which I paste\nbelow. Ask ONE question at a time and wait for my answer. Push on\nanything vague, unrealistic, or unsupported, the way a real\n{boss_short} would. Ask five questions in total. Do not rewrite or\nimprove my work.\nAfter question 5, step out of role and tell me: my most convincing\nanswer, my least convincing answer, and one question I should be ready\nfor next time.\n\nMy {thing}: [paste your work, without names or private details]",
+      submit: "The original work, the interview transcript, a self-assessment of the strongest and weakest answers, and the revised work.",
+      grade: "The quality of the student's own answers and the honesty of the self-assessment, not GenAI's questions.",
+      nogen: "A classmate or the instructor asks five written questions in a discussion thread; the student answers there.",
+      watch: "Professional roles only. Students answer in their own words; ask them to type or record answers without pausing to consult another tool.",
+      lv: { Remember: 0, Understand: 2, Apply: 2, Analyze: 2, Evaluate: 3, Create: 2 }, prod: { goals: 5, roleplay: 5, presentation: 3, proposal: 3, case: 3, code: 2, debate: 2, reflection: 2, essay: 1 }, quant: 0 },
+    { id: "redteam", name: "Red-team your plan", short: "GenAI attacks the student's work, listing every realistic way it could fail. The student decides which attacks land and patches the holes.",
+      why: "Anticipating failure is what separates a plan from a wish. Students must judge which failure points are realistic and change their work to answer them.",
+      steps: ["Students complete the original task.", "GenAI acts as a red team and lists the five most likely ways the work fails, without fixing anything.", "For each failure point students patch it, accept the risk, or dismiss it, with a reason, then revise."],
+      prompt: "Act as a red team. Your only job is to find ways my {part} could\nfail. List the five most likely failure points, from most to least\nlikely. For each, explain how it would fail and the early warning sign\nthat would show it is happening. Be specific and realistic, not harsh.\nDo NOT fix anything and do NOT suggest solutions; that is my job.\n\nMy {part}: [paste your work, without names or private details]",
+      submit: "The original work, the red-team list, a patch table (patch, accept, or dismiss, with a reason for each), and the revised work.",
+      grade: "The patch table: which attacks the student took seriously and how well the revisions answer them.",
+      nogen: "Classmates red-team each other's work in a discussion thread, using the same five-point format.",
+      watch: "Students choose what to share; they can paste a generalized version of anything personal.",
+      lv: { Remember: 0, Understand: 0, Apply: 2, Analyze: 3, Evaluate: 4, Create: 3 }, prod: { goals: 5, proposal: 5, code: 3, case: 2, lab: 2, data: 1 }, quant: 0 },
+    { id: "hidden", name: "The client with hidden constraints", short: "GenAI plays a client who has three needs it will not mention unless the student asks the right questions. The student interviews, uncovers what they can, then delivers.",
+      why: "Real work starts with finding out what the client actually needs. Students learn which questions a professional asks, and the reveal shows them exactly what they missed.",
+      steps: ["Students interview the GenAI client, asking up to ten questions.", "They type REVEAL; GenAI lists its three hidden constraints and which ones the student uncovered.", "Students complete the original task so it meets the constraints, and reflect on which questions worked."],
+      prompt: "Role-play. You are {client}, and you need a {thing} from me. Before we\nstart, secretly decide on three realistic constraints or needs someone\nin your role would have (for example a deadline, a budget, a standard,\nor a preference) that I would not know. Do NOT state them. Reveal one\nonly if I ask a question that would naturally uncover it. Answer other\nquestions briefly and in character.\nWhen I type REVEAL, step out of role, list all three constraints, and\nsay which ones my questions uncovered.\n\nContext: {level_a} course in {discipline}. The task: {assessment}",
+      submit: "The interview transcript with the reveal, the completed task, and a reflection on which questions uncovered constraints and which constraint was missed.",
+      grade: "The quality of the student's questions and how well the final work meets both the original criteria and the discovered constraints.",
+      nogen: "You write three constraint cards per scenario and answer students' questions by email or discussion post, revealing the cards at the deadline.",
+      watch: "Ask students to submit the reveal so you can see the constraints GenAI chose. Keep roles professional and cases fictional.",
+      lv: { Remember: 0, Understand: 1, Apply: 3, Analyze: 3, Evaluate: 2, Create: 4 }, prod: { proposal: 4, case: 4, roleplay: 4, code: 3, data: 2, presentation: 1 }, quant: 0 },
+    { id: "future", name: "The six-month check-in", short: "GenAI jumps ahead six months and narrates how the student's plan actually went, setbacks included. The student traces each setback to their own work and revises.",
+      why: "A story of the plan in action makes vague steps and unrealistic targets visible. Tracing each setback back to a line in the plan is diagnosis, and fixing it is revision with a reason.",
+      steps: ["Students complete the original task.", "GenAI writes a realistic six-month progress report, as if the plan were followed exactly as written.", "Students trace each setback to a specific line in their work, decide whether the story is fair, and revise."],
+      prompt: "It is six months from now. Write a realistic progress report on my\n{thing} below, as if I followed it exactly as written. Include one\nthing that went well, one thing that stalled, and one obstacle I did\nnot plan for. Base the problems on weaknesses in how the {thing} is\nwritten, such as vague steps, missing deadlines, or unrealistic\ntargets. Do not explain the weaknesses; just tell what happened.\n\nMy {thing}: [paste your work, without names or private details]",
+      submit: "The original work, the six-month report, a diagnosis table (each setback, the line it traces to, fair or unfair), and the revised work.",
+      grade: "The diagnosis: whether students connect each setback to their own writing and whether the revision prevents it.",
+      nogen: "You write one check-in story for a typical plan; students diagnose it and apply the lessons to their own work.",
+      watch: "GenAI may invent setbacks unrelated to the plan. Rejecting an unfair setback with a reason is good thinking.",
+      lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 3, Evaluate: 3, Create: 3 }, prod: { goals: 5, proposal: 3, reflection: 3, case: 1 }, quant: 0 },
+    { id: "escape", name: "Escape the vague", short: "GenAI is a gatekeeper that will not let the work pass until every criterion is met. It only asks questions; it never writes. Each criterion is a locked door.",
+      why: "Students do all the revising themselves, guided only by questions. The log shows each fix they made, and the criterion that took the longest shows where their understanding was weakest.",
+      steps: ["Students draft the original task on their own and submit the draft.", "They run the gatekeeper prompt and answer its questions, revising their own wording until each criterion is UNLOCKED.", "When the gatekeeper says ESCAPED, they submit the final work, the log, and a note on which door was hardest."],
+      prompt: "You are a gatekeeper. My {thing} cannot pass until it meets every one\nof these criteria: {criteria}.\nCheck ONE criterion at a time. If it is not met, ask me one question\nthat would help me fix it, then wait for my revision. Never write or\nrewrite any part of my {thing}, and never suggest wording. When a\ncriterion is met, say UNLOCKED and name the next one. When all are\nmet, say ESCAPED.\n\nMy {thing}: [paste your draft, without names or private details]",
+      submit: "The first draft, the gatekeeper log, the final work, and a note on which criterion was hardest and why.",
+      grade: "The final work against the criteria and the log showing that the student made each revision.",
+      nogen: "A classmate checks the draft against the same criteria and may only ask questions in reply.",
+      watch: "GenAI may unlock a criterion too easily. You still grade the final work against the criteria.",
+      lv: { Remember: 0, Understand: 1, Apply: 3, Analyze: 2, Evaluate: 3, Create: 2 }, prod: { goals: 5, proposal: 2, essay: 2, reflection: 2, lab: 1, presentation: 1 }, quant: 0 },
+    { id: "teach", name: "Teach the confused bot", short: "GenAI plays a classmate who is confidently wrong about a key idea. The student teaches until the bot is convinced, and only a correct explanation will convince it.",
+      why: "Teaching exposes gaps in understanding. Students must find the misconception, choose an explanation or example that addresses it, and see whether it lands.",
+      steps: ["Students complete the original task.", "They run the prompt; GenAI explains a common misconception as if it were true.", "Students teach until the bot changes its mind, then reflect on which explanation worked and why."],
+      prompt: "Role-play {level_a} student in {discipline} who confidently believes\na common misconception related to: {outcome}\nStart by explaining your (wrong) understanding in three or four\nsentences, with an example. Then I will try to teach you. Do not change\nyour mind just because I disagree; change it only when my explanation\nor example actually addresses your misconception. Ask the follow-up\nquestions a real confused student would ask. When you are convinced,\nsay what changed your mind.",
+      submit: "The completed task, the teaching transcript, and a reflection naming the misconception and the explanation that worked.",
+      grade: "The accuracy and clarity of the student's teaching, and whether they name the misconception precisely.",
+      nogen: "You write the misconception as a short post; students reply with a teaching explanation and a worked example.",
+      watch: "GenAI sometimes gives in too quickly. Ask students to say whether their explanation would convince a real classmate.",
+      lv: { Remember: 1, Understand: 4, Apply: 3, Analyze: 2, Evaluate: 1, Create: 0 }, prod: { problems: 4, quiz: 4, data: 2, lab: 2, code: 2, discussion: 2 }, quant: 3 },
+    { id: "rank", name: "Rank it, then beat it", short: "GenAI offers three competing versions of the work. Students rank them with reasons, build a fourth of their own that beats them, then rank all four honestly.",
+      why: "Ranking makes students apply the standards of quality to work that is not theirs, and building a better version shows they can meet those standards. Ranking their own honestly is self-assessment.",
+      steps: ["Students run the prompt; GenAI returns three different, unranked versions.", "They rank the three from best to worst with criteria-based reasons.", "They create a fourth version without GenAI, then rank all four and explain where theirs lands and why."],
+      prompt: "Give me three different versions of a {thing} for the task below,\neach built on a different strategy or approach. Number them, but do not\nsay which is best and do not rank them.\n\nTask: {assessment}",
+      submit: "The three GenAI versions, a ranking with reasons, the student's own version, and a final ranking of all four with an explanation.",
+      grade: "The reasons behind each ranking and the quality of the student's own version. A strong reason for ranking their own version below a GenAI one earns credit.",
+      nogen: "You generate the three versions once and give them to every student.",
+      watch: "GenAI's three versions can be near-identical. Ask for different strategies, and check before assigning.",
+      src: "Solution Rank and Solution Rank Plus, from the AI Assignment Flip examples; generating and comparing three outlines, UCLA HumTech.",
+      lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 3, Evaluate: 4, Create: 3 }, prod: { problems: 4, proposal: 4, case: 4, code: 3, essay: 2, data: 2, goals: 2, lab: 1 }, quant: 2 },
+    { id: "remix", name: "Genre showdown", short: "GenAI recasts both sides of a contested question as a rap battle, courtroom exchange, or talk-show debate. Students judge the winner on evidence, not style, and expose what the performance hid.",
+      why: "A performance makes weak arguments sound strong. Judging on the merits forces students to separate claims from delivery, spot fallacies, and notice what changed when the genre changed.",
+      steps: ["Students choose a contested question from the task and a genre.", "GenAI performs both sides in that genre.", "Students judge which side won on evidence, flag unsupported claims and fallacies, and write their own position using the strongest points."],
+      prompt: "Present the strongest arguments on both sides of the question below\nas a back-and-forth [rap battle / courtroom exchange / talk-show\ndebate] between two characters with made-up names. Every line must\ncarry an argument someone in {discipline} would actually make. Give\neach side the same number of turns.\n\nQuestion: [a contested question from the task]",
+      submit: "The performance, a verdict on which side won with reasons, a list of flagged claims and fallacies, and the student's completed original task.",
+      grade: "The verdict and the flagged claims: whether students judge arguments rather than style. Plus the completed task.",
+      nogen: "You generate one performance and post it for the class to judge.",
+      watch: "Use invented characters, never real people, and no stereotyped voices or dialects.",
+      src: "AI Debater's Delight and AI Rapper's Delight, from the AI Assignment Flip examples; mixing genres, UCLA HumTech.",
+      lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 3, Evaluate: 4, Create: 2 }, prod: { debate: 4, essay: 3, discussion: 3, presentation: 2, case: 1 }, quant: 0 },
+    { id: "character", name: "Interview the character", short: "GenAI plays a fictional character from a course text, or speaks for a text's argument. Students interview it, then check its answers against the text.",
+      why: "Students must ask questions that reach into the text, then hold GenAI's answers to the evidence. Catching where the character strays from the text is close reading.",
+      steps: ["Students prepare five questions that a careful reader would ask.", "They interview GenAI in character.", "They check at least three answers against the text with quotes, marking each accurate, stretched, or invented, then complete the original task."],
+      prompt: "Role-play [a fictional character from the course text, or a\nspokesperson for the text's main argument] from [title of the course\ntext]. Answer my questions in character, using only what the text\nsupports. If I ask about something the text does not address, say so\nin character. Stay in character unless I type OUT OF CHARACTER.",
+      submit: "The questions, the transcript, a check table (answer, quote from the text, accurate / stretched / invented), and the completed original task.",
+      grade: "The quality of the questions and the evidence in the check table, plus the completed task.",
+      nogen: "You run the interview with questions students submit, or students script both sides from the text.",
+      watch: "Fictional characters or a text's argument only. Never have GenAI speak as a real person or a member of a demographic group.",
+      field: /literat|novel|poet|fiction|philosoph|histor|religio|classics|reading/,
+      src: "Interview a Fictional Character (Mike Kentz) and Questioning the Bot: Socratic Chats with AI (Nina Yuen), AI Pedagogy Project.",
+      lv: { Remember: 0, Understand: 2, Apply: 1, Analyze: 4, Evaluate: 3, Create: 1 }, prod: { essay: 3, discussion: 3, presentation: 2, roleplay: 2, reflection: 1, case: 1 }, quant: 0 },
+    { id: "transcript", name: "The transcript is the assignment", short: "GenAI writes a fresh scenario nobody has answered online. Students work through it by questioning GenAI, verifying claims, and pushing back. The conversation itself is graded.",
+      why: "The transcript shows the student's reasoning: what they asked, what they checked, and when they disagreed. A fresh scenario means there is no ready-made answer to borrow.",
+      steps: ["Students generate a new scenario with the prompt.", "They work through it by asking GenAI questions, verifying at least two claims against course sources, and pushing back when an answer is weak.", "They write a final analysis and mark three turning points in the transcript."],
+      prompt: "Create one new, realistic scenario for {level_a} course in\n{discipline} that requires a student to: {outcome}\nInclude two or three parties, a complication, and one or two analysis\nquestions. Do NOT answer the questions.\nThen act as my research assistant: answer only what I ask, say where\nyour information comes from, and do not give me the final analysis.",
+      submit: "The full transcript, the final analysis, and three marked turning points with a sentence on each.",
+      grade: "Question formulation, verification, and pushback in the transcript, plus the final analysis against the original criteria.",
+      nogen: "You generate scenarios and answer students' questions in a discussion thread; that thread is the transcript.",
+      watch: "Spot-check generated scenarios for accuracy. Teach students to question GenAI before assigning this.",
+      src: "Michael Feldstein, \"How to ChatGPT-proof Analysis Assignments,\" e-Literate (2023).",
+      lv: { Remember: 0, Understand: 1, Apply: 3, Analyze: 4, Evaluate: 3, Create: 1 }, prod: { case: 5, problems: 2, data: 2, proposal: 2, essay: 1 }, quant: 1 },
+    { id: "duel", name: "Prompt duel", short: "Each student writes the prompt they think will produce the best version of the work. Classmates judge the results with the rubric, and everyone explains what made the winning prompt win.",
+      why: "Students must turn the rubric into precise instructions and then apply it to judge someone else's output. Explaining why one prompt beat another makes quality concrete.",
+      steps: ["Students write a prompt aimed at the best possible version of the work, run it, and post the prompt and output.", "Each student judges two classmates' entries with the rubric.", "Students explain what made the strongest prompt work, then complete the original task themselves."],
+      prompt: "[Starting template; each student writes their own version]\nAct as [a role you choose]. Produce a {thing} for this task:\n{assessment}\nIt must meet these criteria: [list from the rubric]\nAvoid: [a mistake you expect]",
+      submit: "Their prompt and output (first deadline), two rubric-based judgments of classmates' entries, a reflection on the winning prompt, and their own completed task.",
+      grade: "The judgments and the reflection, plus the student's own completed task. The GenAI output itself is not graded.",
+      nogen: "Students write prompts; you run them and post the outputs for judging.",
+      watch: "Run it in a discussion board with two deadlines so it works asynchronously.",
+      src: "Crafting diverse prompts, UCLA HumTech.",
+      lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 4, Create: 3 }, prod: { discussion: 3, essay: 2, presentation: 2, code: 2, proposal: 2, data: 1 }, quant: 0 }
   ];
+
+  // Style tag and assignment-specific hook for each design. F holds details pulled from the uploaded assignment.
+  var VIBE = { sequence: "Remix", planted: "Bug hunt", breakbot: "Game", expert: "Challenge", grade: "Swap seats", disagree: "Referee", verify: "Fact-check", predict: "Place your bet", argue: "Sparring", skeptic: "Role-play", coach: "Coaching", generic: "Contrast", audit: "Detective", hotseat: "Role-play", redteam: "Challenge", hidden: "Mystery", future: "Time jump", escape: "Game", teach: "Role reversal", duel: "Competition", rank: "Ranking", remix: "Remix", character: "Role-play", transcript: "Investigation" };
+  var FUN = { breakbot: 2, planted: 1, predict: 1, hotseat: 2, redteam: 2, hidden: 2, future: 2, escape: 2, teach: 2, duel: 2, rank: 1, remix: 2, character: 2, transcript: 1, argue: 1, skeptic: 1 };
+  var HOOK = {
+    sequence: function (F) { return "GenAI writes a fresh problem on " + F.topic + ". You solve it, remix it into your own world, then catch GenAI's mistakes on your version."; },
+    planted: function (F) { return "Bug hunt: GenAI writes a confident " + F.thing + " with three mistakes planted in it. Can you find all three?"; },
+    breakbot: function (F) { return "Stump the bot: find a question about " + F.topic + " that GenAI answers confidently and wrongly, then prove it wrong."; },
+    expert: function (F) { return "Write the prompt " + F.boss + " would write to get a great " + F.thing + ", then grade what comes back."; },
+    grade: function (F) { return "Swap seats with your instructor: grade three GenAI-written versions of the " + F.thing + " with the real rubric. One is polished but weak."; },
+    disagree: function (F) { return "Two GenAI tools, one question about " + F.topic + ", different answers. You are the referee."; },
+    verify: function (F) { return "Fact-check GenAI's source list on " + F.topic + ": which sources are real, and which did it invent?"; },
+    predict: function (F) { return "Place your bet: predict where GenAI will slip on " + F.topic + ", submit it, then run the prompt and see if you called it."; },
+    argue: function (F) { return "GenAI argues against your " + F.thing + " as hard as it can. You rebut, concede what is fair, and come out stronger."; },
+    skeptic: function (F) { return cap(F.boss) + " reads your " + F.thing + " and pushes back, one objection at a time."; },
+    coach: function (F) { return "GenAI coaches your " + F.thing + " against the " + F.critName + " criteria. You decide which advice to take and which to ignore."; },
+    generic: function (F) { return "GenAI writes the average student's " + F.thing + ". You show why it isn't you, then write yours."; },
+    audit: function (F) { return "You design a scenario on " + F.topic + ", GenAI fakes the data, and you catch what is unrealistic before you analyze it."; },
+    hotseat: function (F) { return cap(F.boss) + ", played by GenAI, interviews you about your " + F.part + ". Can you defend it in your own words?"; },
+    redteam: function (F) { return "GenAI's job is to find every way your " + F.part + " could fail. Yours is to patch the holes."; },
+    hidden: function (F) { return "GenAI plays " + F.client + ", who has three needs it won't mention unless you ask the right questions. Uncover them, then deliver your " + F.thing + "."; },
+    future: function (F) { return "Jump ahead six months: GenAI tells the story of how your " + F.thing + " actually went, setbacks included. Find what caused each one and fix it."; },
+    escape: function (F) { return "Your " + F.thing + " is locked behind " + F.critCount + " doors. GenAI only asks questions; you do every fix yourself until it says ESCAPED."; },
+    teach: function (F) { return "GenAI plays a classmate who is sure of a common mistake about " + F.topic + ". Teach it until it gets it."; },
+    rank: function (F) { return "GenAI offers three competing versions of the " + F.thing + ". You rank them, build a fourth that beats them, and rank your own honestly."; },
+    remix: function (F) { return "GenAI turns both sides of a question about " + F.topic + " into a rap battle or courtroom drama. You judge the winner on evidence, not style, and expose what the performance hid."; },
+    character: function (F) { return "Interview a character from the course text, or the text's argument itself, then catch every answer that strays from what the text actually says."; },
+    transcript: function (F) { return "GenAI invents a fresh " + F.topic + " case nobody has answered online. You crack it by questioning GenAI, and your transcript is what gets graded."; },
+    duel: function (F) { return "Prompt duel: whose prompt produces the best " + F.thing + "? Classmates judge with the rubric, and everyone explains why the winner won."; }
+  };
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  var THING = { goals: "goal", essay: "essay", problems: "solution", bibliography: "source list", data: "analysis", presentation: "presentation", discussion: "discussion post", debate: "debate position", roleplay: "role-play plan", case: "case response", code: "code", proposal: "proposal", reflection: "reflection", quiz: "answer", lab: "lab report" };
+  var BOSS_BY_PRODUCT = { goals: "a hiring manager in the field you want to work in", essay: "a skeptical expert reviewer", problems: "a manager who has to act on your numbers", bibliography: "a journal peer reviewer", data: "a manager who has to make a decision from your analysis", presentation: "a tough audience member", discussion: "a well-read colleague who disagrees with you", debate: "the opposing team's captain", roleplay: "a demanding client", case: "an experienced supervisor", code: "a senior engineer doing code review", proposal: "the decision-maker who would fund it", reflection: "a mentor in your field", quiz: "an expert examiner", lab: "the lab supervisor" };
+  var BOSS_BY_FIELD = [
+    [/nurs|clinical|patient/, "a charge nurse"], [/medic|health|emergency|pharm/, "an attending physician"], [/psych|counsel|social work/, "a licensed clinical supervisor"],
+    [/cyber|security/, "a chief information security officer"], [/software|computer|programming|information (systems|technology)|web|data science/, "a senior engineer"],
+    [/business|marketing|management|account|finance|econom/, "a skeptical client"], [/educat|teach|curricul/, "a school principal"], [/law|legal|criminal justice/, "opposing counsel"],
+    [/journalism|media|communication/, "a newsroom editor"], [/theat|drama|perform/, "a director"], [/art|design/, "a client with a tight brief"], [/histor/, "a museum curator"],
+    [/chinese|spanish|french|language|linguist/, "a native-speaking business partner"], [/librar|information literacy/, "a reference librarian"], [/math|statistic/, "a manager who has to act on your numbers"]
+  ];
+  var STOP = "a an the and or of to in on for with by at from as is are be this that these those it its your you yours their our we i my me will can may must should would could each every any all at least one two three four five next slide slides notes note page section above below beneath include including add use using view select click insert name image images design deck want do does what when how why who which if not then than so also more most like example examples etc assignment assignments student students course instructor submit submission rubric points due week module learning resources instructions steps step complete completed provide state write create list identify make sure take look understand assessed grade appropriate different following specific given new own good final short brief clear main key important based".split(" ");
+
+  function specifics(asm, outs, products, ctx) {
+    var t = lc(asm), top = products[0] ? products[0].key : null;
+    var smart = /smart goal|s \(specific\)|time-bound/.test(t);
+    var thing = top === "goals" ? (smart ? "SMART goal" : "goal") : (THING[top] || "work");
+    // concrete parts: short all-caps headings (slide titles, section names), e.g., ACADEMIC, PROFESSIONAL, ACTION ITEMS
+    var heads = [];
+    asm.split(/\r?\n/).forEach(function (l) {
+      var s = l.trim().replace(/[:.]$/, "");
+      if (s.length >= 4 && s.length <= 40 && s.split(/\s+/).length <= 4 && s === s.toUpperCase() && /[A-Z]{3}/.test(s) && !/INSTRUCTIONS|STEPS|SLIDE|PAGE/.test(s)) {
+        var nice = s.charAt(0) + s.slice(1).toLowerCase();
+        if (heads.indexOf(nice) < 0) heads.push(nice);
+      }
+    });
+    var part = thing;
+    if (top === "goals") {
+      var g = ["professional", "career", "academic", "personal", "financial", "health"].find(function (w) { return t.indexOf(w) >= 0; });
+      if (g) part = g + " " + thing + " and its action items";
+      if (/action item/.test(t) && !g) part = thing + " and action items";
+    }
+    // topic: most frequent meaningful two-word phrase, else discipline
+    var words = lc(asm + " " + outs.map(function (o) { return o.text; }).join(" ")).replace(/[^a-z\s-]/g, " ").split(/\s+/).filter(Boolean);
+    var counts = {};
+    for (var i = 0; i < words.length - 1; i++) {
+      var a = words[i], b = words[i + 1];
+      if (a.length < 3 || b.length < 3 || STOP.indexOf(a) >= 0 || STOP.indexOf(b) >= 0) continue;
+      var k = a + " " + b; counts[k] = (counts[k] || 0) + 1;
+    }
+    var best = Object.keys(counts).sort(function (x, y) { return counts[y] - counts[x]; })[0];
+    var topic = top === "goals" ? (smart ? "setting SMART goals" : "goal setting") : best && counts[best] >= 2 ? best : (ctx.discipline !== "your discipline" ? ctx.discipline : "this topic");
+    // professional stakeholder: career goals get a hiring manager; otherwise field first, then product
+    var field = lc(ctx.discipline + " " + asm.slice(0, 400));
+    var boss = (top === "goals") ? BOSS_BY_PRODUCT.goals : ((BOSS_BY_FIELD.find(function (p) { return p[0].test(field); }) || [])[1] || BOSS_BY_PRODUCT[top] || "a demanding reviewer in your field");
+    var crit = smart ? ["Specific", "Measurable", "Achievable", "Relevant", "Time-bound"] : null;
+    var client = top === "debate" ? "the judge who will score your debate" : top === "essay" ? "an editor who commissioned your essay" : boss;
+    return { thing: thing, part: part, topic: topic, boss: boss, client: client, bossShort: boss.replace(/^(a|an|the) /, ""), heads: heads.slice(0, 8),
+      critName: smart ? "SMART" : "assignment's", critCount: crit ? "five" : "a set of", criteria: crit ? crit.join(", ") : "[paste the criteria from the assignment or rubric]" };
+  }
 
   // ---------------- analysis ----------------
   function parseOutcomes(text) {
@@ -452,18 +649,24 @@
       });
       products.forEach(function (p) { if (d.prod[p.key]) { s += d.prod[p.key] * 1.5; if (d.prod[p.key] >= 2) reasons.push("Your assessment type (" + p.label.toLowerCase() + ") is a strong fit for this design."); } });
       if (quant && d.quant) { s += d.quant * 1.5; reasons.push("Quantitative disciplines suit this design well."); }
-      if (ctx.access === "none" && /verify|disagree|breakbot|expert|predict/.test(d.id)) { s -= 2; }
+      if (ctx.access === "none" && /verify|disagree|breakbot|expert|predict|duel/.test(d.id)) { s -= 2; }
+      s += (FUN[d.id] || 0) * 1.5;
+      if (d.field && d.field.test(lc(ctx.discipline))) { s += 3; reasons.push("Your discipline works especially well with this design."); }
       return { d: d, score: s, reasons: reasons.filter(function (r, i, a) { return a.indexOf(r) === i; }).slice(0, 3) };
     }).sort(function (a, b) { return b.score - a.score; });
 
     var firstOutcome = (outs.find(function (o) { return o.level && /Apply|Analyze|Evaluate|Create/.test(o.level); }) || outs[0] || { text: "[your learning outcome]" }).text;
+    var F = specifics(asm, outs, products, ctx);
+    F.genericAsk = "a " + F.thing + (F.heads.length ? " (the assignment covers: " + F.heads.slice(0, 5).join(", ") + ")" : "") + ", following this task: " + asm.replace(/\s+/g, " ").slice(0, 300) + (asm.length > 300 ? " [...]" : "");
     var excerpt = asm.replace(/\s+/g, " ").slice(0, 600) + (asm.length > 600 ? " [...]" : "");
     var fill = function (tpl) {
-      return tpl.replace(/\ba \{level\}/g, (/^[aeiou]/i.test(ctx.level) ? "an " : "a ") + ctx.level).replace(/\{discipline\}/g, ctx.discipline).replace(/\{level\}/g, ctx.level).replace(/\{outcome\}/g, firstOutcome)
+      // rejoin hard-wrapped template lines so filled-in details flow naturally
+      return tpl.replace(/([^\n.:?!])\n(?=[a-z(\[{"])/g, "$1 ").replace(/\{level_a\}/g, (/^[aeiou]/i.test(ctx.level) ? "an " : "a ") + ctx.level).replace(/\{boss_short\}/g, F.bossShort).replace(/\{boss\}/g, F.boss).replace(/\{client\}/g, F.client).replace(/\{thing\}/g, F.thing).replace(/\{part\}/g, F.part).replace(/\{criteria\}/g, F.criteria).replace(/\{generic_ask\}/g, F.genericAsk)
+        .replace(/\ba \{level\}/g, (/^[aeiou]/i.test(ctx.level) ? "an " : "a ") + ctx.level).replace(/\{discipline\}/g, ctx.discipline).replace(/\{level\}/g, ctx.level).replace(/\{outcome\}/g, firstOutcome)
         .replace(/\{outcome_q\}/g, "[A question from your course that requires students to: " + firstOutcome + "]").replace(/\{assessment\}/g, excerpt);
     };
 
-    render({ ctx: ctx, outs: outs, products: products, sigs: sigs, vlevel: vlevel, scored: scored, fill: fill, asm: asm, outcomesText: outcomesText, quant: quant });
+    render({ F: F, ctx: ctx, outs: outs, products: products, sigs: sigs, vlevel: vlevel, scored: scored, fill: fill, asm: asm, outcomesText: outcomesText, quant: quant });
   }
 
   var LAST = null;
@@ -501,15 +704,15 @@
     var html = "";
     R.scored.forEach(function (sc, i) {
       var d = sc.d, open = i === 0 ? " open" : "";
-      html += '<details class="design"' + open + "><summary><span class=\"rank\">" + (i + 1) + "</span><span><h4>" + esc(d.name) + (i < 3 ? ' <span class="pill blue">Top match</span>' : "") + '</h4><p class="tw">' + esc(d.short) + "</p></span></summary><div class=\"body\">";
+      html += '<details class="design"' + open + "><summary><span class=\"rank\">" + (i + 1) + "</span><span><h4>" + esc(d.name) + ' <span class="pill vibe">' + esc(VIBE[d.id]) + "</span>" + (i < 3 ? ' <span class="pill blue">Top match</span>' : "") + '</h4><p class="tw hook">' + esc(HOOK[d.id](R.F)) + "</p></span></summary><div class=\"body\"><p><strong>How it works:</strong> " + esc(d.short) + "</p>";
       if (sc.reasons.length) html += '<div class="why"><strong>Why it fits your assessment</strong><ul>' + sc.reasons.map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul></div>";
       html += "<p><strong>Why it builds thinking:</strong> " + esc(d.why) + "</p><p><strong>How it runs</strong></p><ol class=\"steps\">" + d.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>";
       html += '<div class="promptbox"><div class="bar"><span>Copy-ready prompt, filled with your details (edit the [brackets])</span><button type="button" data-copy="p_' + d.id + '">Copy</button></div><pre id="p_' + d.id + '">' + esc(R.fill(d.prompt)) + "</pre></div>";
       if (R.ctx.access === "none") html += '<div class="why"><strong>No-GenAI route (your students can\'t use a tool):</strong> ' + esc(d.nogen) + '</div>';
-      html += '<div class="kv"><b>Students submit</b><span>' + esc(d.submit) + "</span><b>Grade</b><span>" + esc(d.grade) + "</span><b>No-GenAI route</b><span>" + esc(d.nogen) + "</span><b>Watch for</b><span>" + esc(d.watch) + '</span></div><button type="button" class="noprint" data-use="' + d.id + '">Build my assignment with this design</button></div></details>';
+      html += '<div class="kv"><b>Students submit</b><span>' + esc(d.submit) + "</span><b>Grade</b><span>" + esc(d.grade) + "</span><b>No-GenAI route</b><span>" + esc(d.nogen) + "</span><b>Watch for</b><span>" + esc(d.watch) + "</span>" + (d.src ? "<b>Adapted from</b><span>" + esc(d.src) + "</span>" : "") + '</div><button type="button" class="noprint" data-use="' + d.id + '">Build my assignment with this design</button></div></details>';
     });
     $("designList").innerHTML = html;
-    $("designPick").innerHTML = R.scored.map(function (sc, i) { return '<option value="' + sc.d.id + '">' + (i + 1) + ". " + esc(sc.d.name) + "</option>"; }).join("");
+    $("designPick").innerHTML = R.scored.map(function (sc, i) { return '<option value="' + sc.d.id + '">' + (i + 1) + ". " + esc(sc.d.name) + " (" + esc(VIBE[sc.d.id]) + ")</option>"; }).join("");
 
     $("expectation").value = expectation(top.d, R);
     $("deepPrompt").textContent = deepPrompt(R);
@@ -532,7 +735,18 @@
     verify: ["produce a starting list of sources", "verify every source, replace weak or invented ones, and explain what makes a source trustworthy"],
     predict: ["answer the question after you have predicted its errors", "predict, compare, and reflect on the gap"],
     skeptic: ["play a professional stakeholder who challenges your work", "respond, revise, and explain what you changed and why"],
-    audit: ["generate a dataset from the scenario you design", "audit the data for realism and analyze it without GenAI"]
+    audit: ["generate a dataset from the scenario you design", "audit the data for realism and analyze it without GenAI"],
+    hotseat: ["interview you as a demanding professional about your work", "answer in your own words, judge which answers held up, and revise"],
+    redteam: ["list the ways your work could fail, without fixing anything", "decide which failure points are real, patch them, and explain each decision"],
+    hidden: ["play a client with needs it keeps hidden until you ask the right questions", "ask the questions, uncover the needs, and deliver work that meets them"],
+    future: ["tell the story of how your plan went six months from now", "trace each setback to your own work, judge whether it is fair, and revise"],
+    escape: ["ask questions until your work meets every criterion, without writing any of it", "make every revision yourself until each criterion is met"],
+    teach: ["play a classmate who believes a common misconception", "teach it correctly and explain which explanation worked and why"],
+    rank: ["offer three competing versions of the work", "rank them with reasons, build a better fourth version yourself, and rank all four honestly"],
+    remix: ["perform both sides of a question in a playful genre", "judge the winner on evidence, flag weak claims, and write your own position"],
+    character: ["play a character or speak for a text's argument", "ask probing questions and check every answer against the text"],
+    transcript: ["create a fresh scenario and answer only the questions you ask", "question, verify, and push back, then write the final analysis yourself"],
+    duel: ["produce output from the prompts you and your classmates write", "judge classmates' results with the rubric, explain what made the best prompt work, and complete the task yourself"]
   };
   function expectation(d, R) {
     var j = JOBS[d.id];
@@ -661,7 +875,84 @@
               "Audit the data with summary statistics and graphs. Is it realistic? Report any problems you find.",
               "Complete the original analysis without GenAI, using your dataset."],
       submit: ["Your scenario and variables", "Your prompt and the dataset", "Your audit report", "Your completed analysis"],
-      rubric: [["Scenario and variables", 10], ["Audit supported by statistical evidence", 30], ["Analysis completed without GenAI meets the original criteria", 60]] }
+      rubric: [["Scenario and variables", 10], ["Audit supported by statistical evidence", 30], ["Analysis completed without GenAI meets the original criteria", 60]] },
+    hotseat: { needsTool: true,
+      steps: ["Complete the original task on your own.",
+              "Use the prompt below. GenAI plays {boss} and interviews you about your {thing}, one question at a time.",
+              "Answer every question in your own words. Do not use GenAI or any other tool to write your answers.",
+              "When the interview ends, mark your strongest and weakest answers and explain why. Revise your {thing} wherever the interview exposed a gap."],
+      submit: ["Your original {thing}", "The interview transcript", "Your self-assessment of your strongest and weakest answers", "Your revised {thing}"],
+      rubric: [["Original work meets the original criteria", 40], ["Your answers: clear, specific, and in your own words", 30], ["Self-assessment and revision", 30]] },
+    redteam: { needsTool: true,
+      steps: ["Complete the original task on your own.",
+              "Use the prompt below. GenAI acts as a red team and lists the five most likely ways your {part} could fail. It will not fix anything.",
+              "For each failure point, decide: patch it, accept the risk, or dismiss it as unrealistic. Give a one-sentence reason for each.",
+              "Revise your work to include your patches."],
+      submit: ["Your original work", "GenAI's red-team list", "Your patch table: each failure point, your decision, and your reason", "Your revised work"],
+      rubric: [["Original work meets the original criteria", 35], ["Patch decisions, each with a sound reason", 40], ["Revised work answers the failure points you accepted", 25]] },
+    hidden: { needsTool: true,
+      steps: ["Use the prompt below. GenAI plays {client}, who has three needs it will not mention unless you ask the right questions.",
+              "Interview the client. You may ask up to ten questions, so choose them carefully.",
+              "Type REVEAL. GenAI lists its three hidden needs and which ones you uncovered.",
+              "Complete the original task so it meets the original criteria and every need you uncovered. Then reflect: which questions worked, and which need did you miss and why?"],
+      submit: ["The interview transcript, including the reveal", "Your completed original task", "Your reflection on your questions"],
+      rubric: [["Quality of your questions", 25], ["Completed task meets the original criteria and the client's needs", 50], ["Reflection on which questions worked and what you missed", 25]] },
+    future: { needsTool: true,
+      steps: ["Complete the original task on your own.",
+              "Use the prompt below. GenAI jumps six months ahead and tells the story of how your {thing} went if you followed it exactly as written.",
+              "For each setback in the story, find the line in your work that caused it. Decide whether the setback is fair or unfair, and say why.",
+              "Revise your {thing} so the fair setbacks would not happen."],
+      submit: ["Your original {thing}", "GenAI's six-month progress report", "Your diagnosis table: each setback, the line it traces to, and fair or unfair with a reason", "Your revised {thing}"],
+      rubric: [["Original work meets the original criteria", 35], ["Diagnosis connects each setback to your own work", 35], ["Revision prevents the fair setbacks", 30]] },
+    escape: { needsTool: true,
+      steps: ["Draft the original task on your own, without GenAI. Submit your draft first.",
+              "Use the prompt below. GenAI is a gatekeeper that checks one criterion at a time and only asks questions.",
+              "Answer each question by revising your own wording. GenAI never writes for you. Keep going until each criterion is UNLOCKED and the gatekeeper says ESCAPED.",
+              "Write a short note: which criterion was the hardest to unlock, and why?"],
+      submit: ["Your first draft (submit first)", "The gatekeeper log", "Your final work", "Your note on the hardest criterion"],
+      rubric: [["First draft", 20], ["Final work meets every criterion", 45], ["Log shows you made each revision", 20], ["Note on the hardest criterion", 15]] },
+    teach: { needsTool: true,
+      steps: ["Complete the original task on your own.",
+              "Use the prompt below. GenAI plays a classmate who confidently believes a common misconception.",
+              "Teach it. Use explanations and examples until it changes its mind. It will not give in just because you disagree.",
+              "Reflect: name the misconception precisely, say which explanation worked, and say what teaching showed you about your own understanding."],
+      submit: ["Your completed original task", "The teaching transcript", "Your reflection"],
+      rubric: [["Completed task meets the original criteria", 40], ["Teaching: accurate, clear, and aimed at the misconception", 40], ["Reflection", 20]] },
+    rank: { needsTool: true,
+      steps: ["Use the prompt below. GenAI gives you three different versions of a {thing} for the original task.",
+              "Rank the three from best to worst. For each, give a reason tied to the assignment's criteria.",
+              "Without GenAI, create your own fourth version that you think beats all three.",
+              "Rank all four, including yours, and explain where yours lands and why. An honest ranking earns more than a flattering one."],
+      submit: ["GenAI's three versions", "Your ranking with reasons", "Your own version", "Your final ranking of all four with an explanation"],
+      rubric: [["Ranking of the three, with criteria-based reasons", 30], ["Your own version meets the original criteria", 45], ["Final ranking and explanation", 25]] },
+    remix: { needsTool: true,
+      steps: ["Choose a contested question from the original task and a genre: rap battle, courtroom exchange, or talk-show debate.",
+              "Use the prompt below. GenAI performs both sides in that genre.",
+              "Decide which side won on evidence, not style. Flag every claim that is unsupported, fallacious, or lost in the performance.",
+              "Complete the original task, taking your own position and using the strongest points from either side."],
+      submit: ["GenAI's performance", "Your verdict with reasons", "Your list of flagged claims and fallacies", "Your completed original task"],
+      rubric: [["Verdict judged on evidence, with reasons", 20], ["Flagged claims and fallacies, correctly explained", 30], ["Completed task meets the original criteria", 50]] },
+    character: { needsTool: true,
+      steps: ["Write five questions a careful reader of the course text would ask the character, or the text's argument.",
+              "Use the prompt below and interview GenAI in character.",
+              "Check at least three answers against the text. For each, quote the text and mark the answer accurate, stretched, or invented.",
+              "Complete the original task, using what the interview and your checks revealed."],
+      submit: ["Your five questions", "The interview transcript", "Your check table with quotes", "Your completed original task"],
+      rubric: [["Questions reach into the text", 20], ["Check table: answers tested against quoted evidence", 35], ["Completed task meets the original criteria", 45]] },
+    transcript: { needsTool: true,
+      steps: ["Use the prompt below. GenAI creates a new scenario and then acts as your research assistant.",
+              "Work through the scenario by asking GenAI questions. Verify at least two of its claims against course sources, and push back when an answer is weak or unsupported.",
+              "Write your final analysis yourself.",
+              "Mark three turning points in the transcript and write one sentence on each: what you asked or checked, and how it changed your thinking."],
+      submit: ["The full transcript", "Your final analysis", "Your three marked turning points"],
+      rubric: [["Questions: precise and purposeful", 20], ["Verification and pushback", 25], ["Final analysis meets the original criteria", 45], ["Turning points", 10]] },
+    duel: { needsTool: true,
+      steps: ["Write the prompt you think will produce the best possible {thing} for the original task. Start from the template below and make it your own.",
+              "Run your prompt. Post your prompt and GenAI's output to the discussion board by the first deadline.",
+              "By the second deadline, judge two classmates' entries with the course rubric. Give a score and a reason for each criterion.",
+              "Explain what made the strongest prompt you saw work. Then complete the original task yourself, without GenAI."],
+      submit: ["Your prompt and its output (first deadline)", "Your judgments of two classmates' entries", "Your explanation of what made the best prompt work", "Your own completed original task"],
+      rubric: [["Your own completed task meets the original criteria", 40], ["Judgments: accurate scores with reasons tied to the rubric", 30], ["Explanation of what made the best prompt work", 15], ["Your prompt: precise, tied to the rubric", 15]] }
   };
 
   function asmTitle(asm) {
@@ -692,17 +983,18 @@
     var h = "";
     h += '<h1 style="' + S.h1 + '">' + esc(title) + "</h1>";
     h += '<p style="' + S.tag + '">Redesigned with GenAI in the loop: ' + esc(d.name) + "</p>";
+    h += '<p style="' + S.note.replace("#fff3df", "#e9f4ec").replace("#c27a00", "#2e7d4f") + '"><strong>The twist:</strong> ' + esc(HOOK[id](R.F)) + "</p>";
     h += '<h2 style="' + S.h2 + '">What this assignment shows</h2><p style="' + S.p + '">By completing this assignment, you will show that you can:</p><ol>' + li(outs.map(function (o) { return o.text; })) + "</ol>";
     h += '<h2 style="' + S.h2 + '">The original task</h2><div style="' + S.box + '">' + esc(R.asm) + "</div>";
     h += '<h2 style="' + S.h2 + '">How GenAI fits into this assignment</h2><p style="' + S.p + '">' + esc($("expectation").value) + "</p>";
-    h += '<h2 style="' + S.h2 + '">What to do</h2><ol>' + li(st.steps) + "</ol>";
+    h += '<h2 style="' + S.h2 + '">What to do</h2><ol>' + li(st.steps.map(R.fill)) + "</ol>";
     if (st.needsTool) {
       h += '<h2 style="' + S.h2 + '">' + (id === "sequence" ? "Prompts to use" : "Prompt to use") + '</h2><p style="' + S.p + '">Copy the prompt into a GenAI tool your institution permits. Replace anything in [brackets]. Never include personal information about yourself or anyone else.</p>';
       h += '<div style="' + S.pre + '">' + esc(R.fill(d.prompt)) + "</div>";
     } else {
       h += '<p style="' + S.note + '">You do not need a GenAI tool for this assignment. Your instructor provides the GenAI-written material.</p>';
     }
-    h += '<h2 style="' + S.h2 + '">What to submit</h2><ol>' + li(st.submit) + "</ol>";
+    h += '<h2 style="' + S.h2 + '">What to submit</h2><ol>' + li(st.submit.map(R.fill)) + "</ol>";
     if (st.needsTool) h += '<p style="' + S.p + '">For each GenAI interaction, keep a short log: the prompt you used, what GenAI returned, what you kept, changed, or rejected, and why.</p>';
     h += '<h2 style="' + S.h2 + '">How it is graded</h2><p style="' + S.p + '">Your judgment is what is graded, not GenAI\'s output. A GenAI error that you catch and explain counts in your favor.</p>';
     h += '<table style="' + S.table + '"><tr><th style="' + S.th + '">Criterion</th><th style="' + S.th + 'width:90px;">Weight</th></tr>';
