@@ -115,17 +115,19 @@
 <!-- INPUTS -->
 <section class="card" id="inputs" aria-labelledby="h-in">
   <h2 id="h-in">Your original assignment</h2>
-  <p class="sub">Paste text or upload a .txt or .docx file. For a PDF, copy its text and paste it in. Any kind of assignment works: essays, problem sets, labs, presentations, debates, role-plays, simulations, case studies, projects, discussion posts, code, and more.</p>
+  <p class="sub">Paste text, or upload a Word (.docx), PowerPoint (.pptx), PDF, or text file. For slides, the studio also reads the speaker notes, where instructions often live. Any kind of assignment works: essays, problem sets, labs, presentations, debates, role-plays, simulations, case studies, projects, discussion posts, code, and more.</p>
   <div class="grid2">
     <div>
       <label class="lbl" for="outcomes">Learning outcomes for this assignment <span class="help">One per line. They stay exactly the same in the redesign.</span></label>
       <textarea id="outcomes" placeholder="Example:&#10;Interpret statistical results in context.&#10;Evaluate whether conclusions follow from the data."></textarea>
-      <div class="upload"><label for="fileOut">Upload outcomes:</label><input type="file" id="fileOut" accept=".txt,.md,.docx"></div>
+      <div class="upload"><label for="fileOut">Upload outcomes:</label><input type="file" id="fileOut" accept=".txt,.md,.docx,.pptx,.pdf"></div>
     </div>
     <div>
-      <label class="lbl" for="assessment">The assignment, exactly as students receive it <span class="help">Include the title on the first line, the instructions, and the grading criteria.</span></label>
+      <label class="lbl" for="asmTitleIn">Assignment title</label>
+      <input type="text" id="asmTitleIn" placeholder="e.g., My Goals, Motivations, and Values" style="margin-bottom:10px">
+      <label class="lbl" for="assessment">The assignment, exactly as students receive it <span class="help">The instructions and grading criteria students receive.</span></label>
       <textarea id="assessment" placeholder="Title of the assignment&#10;Instructions...&#10;Grading criteria..."></textarea>
-      <div class="upload"><label for="fileAsm">Upload assignment:</label><input type="file" id="fileAsm" accept=".txt,.md,.docx"></div>
+      <div class="upload"><label for="fileAsm">Upload assignment:</label><input type="file" id="fileAsm" accept=".txt,.md,.docx,.pptx,.pdf"></div>
     </div>
   </div>
   <div class="grid3" style="margin-top:16px">
@@ -264,6 +266,7 @@
     code: { label: "Code or technical build", kw: ["code", "program", "script", "algorithm", "function", "python", "java", "sql", "configure", "network"] },
     proposal: { label: "Proposal or plan", kw: ["proposal", "business plan", "policy brief", "recommendation", "plan for", "propose", "memo"] },
     reflection: { label: "Reflection", kw: ["reflect", "reflection", "journal", "self-assessment"] },
+    goals: { label: "Goal setting or personal planning", kw: ["smart goal", "goal statement", "your goals", "my goals", "values", "motivation", "action items", "career plan", "personal growth", "academic achievement", "professional development", "time-bound", "self-assessment", "strengths"] },
     quiz: { label: "Quiz or exam", kw: ["quiz", "exam", "multiple choice", "short answer", "test questions", "midterm", "final exam"] },
     lab: { label: "Lab or experiment", kw: ["lab report", "experiment", "procedure", "observations", "lab"] }
   };
@@ -371,6 +374,24 @@
       nogen: "A classmate or the instructor raises written objections in a discussion post.",
       watch: "Professional roles only. Never have GenAI speak as a member of a demographic group.",
       lv: { Remember: 0, Understand: 0, Apply: 1, Analyze: 1, Evaluate: 3, Create: 3 }, prod: { proposal: 4, essay: 2, presentation: 2, case: 1, debate: 3, roleplay: 4 }, quant: 0 },
+    { id: "coach", name: "Draft, get coached, decide", short: "Students draft first; GenAI gives feedback against the assignment's criteria; students accept or reject each point with a reason.",
+      why: "Students must judge feedback instead of absorbing it. Deciding which suggestions make their own work better, and explaining why, is the critical thinking; the draft stays theirs.",
+      steps: ["Students complete a first draft on their own.", "They paste the draft, with names and private details removed, into GenAI with a prompt that asks for feedback against the assignment's criteria.", "For each feedback point they accept, adapt, or reject it with a reason, then revise."],
+      prompt: "You are a demanding but supportive coach for a {level} course in\n{discipline}. Give feedback on my draft below using ONLY these criteria:\n[paste the assignment's criteria, e.g., Specific, Measurable,\nAchievable, Relevant, Time-bound]\nFor each criterion, say what is strong, what is weak, and ask one\nquestion that would push me to improve it. Do NOT rewrite my draft.\n\nMy draft: [paste your draft, without names or private details]",
+      submit: "The first draft, the GenAI feedback, a decision table (each point accepted, adapted, or rejected, with a reason), and the revised work.",
+      grade: "The decision table and the quality of the revision. Rejecting weak feedback with a good reason earns as much as accepting strong feedback.",
+      nogen: "A classmate or the instructor gives feedback against the same criteria; students make the same decisions.",
+      watch: "Students choose what to share. Personal goals and values stay private unless the student decides otherwise; they can paste a generalized version.",
+      lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 2, Evaluate: 4, Create: 3 }, prod: { goals: 5, reflection: 3, proposal: 2, essay: 2, presentation: 1 }, quant: 0 },
+    { id: "generic", name: "Generic versus mine", short: "GenAI writes a generic example; students explain what makes it generic, then write their own and show how it reflects them.",
+      why: "GenAI produces the average answer. Seeing why the average does not fit their own life, values, or context forces students to make their work specific and personal, which is the point of reflective assignments.",
+      steps: ["Students have GenAI write a generic example of the product, for a typical student.", "They annotate it: what is vague, unrealistic, or untrue for them, and why.", "They write their own version and explain how it reflects their values, circumstances, and evidence."],
+      prompt: "Write an example of the following for a typical {level} student in\n{discipline}: [the product, e.g., a SMART goal for academic achievement,\nwith three action items]. Make it sound reasonable but general.\nDo not ask me any questions about myself.",
+      submit: "The generic example with annotations, the student's own version, and a short explanation of the differences.",
+      grade: "The annotations and the explanation: how clearly students show what makes their version specific to them.",
+      nogen: "The instructor supplies one generic example for the class.",
+      watch: "Students never need to share personal information with GenAI in this design; only the generic prompt goes in.",
+      lv: { Remember: 0, Understand: 2, Apply: 1, Analyze: 3, Evaluate: 2, Create: 3 }, prod: { goals: 5, reflection: 4, essay: 1, presentation: 1 }, quant: 0 },
     { id: "audit", name: "Audit the synthetic data", short: "Students design a scenario, GenAI generates the dataset, and students audit it before analyzing it without GenAI.",
       why: "Students care about data on a topic they chose, and auditing it uses the same statistical thinking as the analysis.",
       steps: ["Students design the scenario, questions, and variables.", "They generate the dataset and audit it with summary statistics and graphs.", "They analyze it without GenAI and report."],
@@ -499,6 +520,8 @@
   function stat(k, v) { return '<div class="stat"><div class="k">' + k + '</div><div class="v">' + v + "</div></div>"; }
 
   var JOBS = {
+    coach: ["give feedback on your draft against the assignment criteria", "decide which feedback to accept, adapt, or reject, explain why, and revise"],
+    generic: ["write a generic example for a typical student", "explain what makes it generic and write your own version that reflects you"],
     argue: ["build the strongest case against your position", "rebut it with evidence, concede what is valid, and explain how your position changed"],
     sequence: ["build a practice problem for you, and later to solve your personalized version", "solve the problem yourself, personalize it, and analyze where GenAI's solution differs from yours"],
     planted: ["provide a sample response that contains errors", "find, explain, and correct each error using course materials"],
@@ -619,6 +642,19 @@
               "Revise your work and write a memo on what you changed, what you defended, and why."],
       submit: ["Your original work", "An excerpt of the exchange", "Your revised work and memo"],
       rubric: [["Original work meets the original criteria", 40], ["Responses to the challenges", 25], ["Memo: justified decisions about what to change or defend", 35]] },
+    coach: { needsTool: true,
+      steps: ["Complete a first draft of the original task on your own, without GenAI.",
+              "Copy your draft, removing names and any private details you don't want to share. Use the prompt below to get feedback on it.",
+              "For each feedback point, decide to accept, adapt, or reject it, and write one sentence explaining why.",
+              "Revise your work based on your decisions."],
+      submit: ["Your first draft (submit first)", "GenAI's feedback", "Your decision table: each point, your decision, and your reason", "Your revised work"],
+      rubric: [["First draft meets the original criteria", 30], ["Decisions about feedback, each with a sound reason", 35], ["Revision reflects your decisions", 25], ["Reflection on what the feedback taught you", 10]] },
+    generic: { needsTool: true,
+      steps: ["Use the prompt below to have GenAI write a generic example of what this task asks for. Do not share anything about yourself.",
+              "Annotate the example: mark what is vague, unrealistic, or not true for you, and explain why.",
+              "Complete the original task yourself, then write a short explanation of how your version reflects your own values, circumstances, and evidence."],
+      submit: ["GenAI's generic example, with your annotations", "Your completed original task", "Your explanation of the differences"],
+      rubric: [["Annotations identify what makes the example generic", 25], ["Completed task meets the original criteria", 50], ["Explanation of how your version is specific to you", 25]] },
     audit: { needsTool: true,
       steps: ["Design your scenario: the questions you want to answer and the variables you will study.",
               "Use the prompt below to have GenAI generate a dataset for your scenario.",
@@ -629,8 +665,10 @@
   };
 
   function asmTitle(asm) {
+    var typed = ($("asmTitleIn") && $("asmTitleIn").value.trim()) || "";
+    if (typed) return typed;
     var first = (asm.split(/\r?\n/).find(function (l) { return l.trim(); }) || "").trim();
-    return first && first.length <= 90 ? first.replace(/[:.]$/, "") : "Assignment";
+    return first && first.length <= 90 && !/^slide \d+$/i.test(first) && !/^page \d+$/i.test(first) ? first.replace(/[:.]$/, "") : "Assignment";
   }
   // Inline styles only, so the result survives LMS editors that strip <style> blocks.
   var S = {
@@ -723,43 +761,109 @@
       '<style>body{font-family:Arial,sans-serif;max-width:820px;margin:32px auto;padding:0 16px;line-height:1.55;color:#1c2024;background:#fff}</style></head><body><div style="font-family:Arial,sans-serif">' + body + "</div></body></html>";
   }
 
-  // ---------------- file reading (.txt, .docx) ----------------
+  // ---------------- file reading (.txt, .md, .docx, .pptx, .pdf) ----------------
   async function readFile(file) {
     var name = lc(file.name);
     if (name.endsWith(".docx")) return readDocx(await file.arrayBuffer());
-    if (name.endsWith(".pdf")) throw new Error("PDF files can't be read here. Open the PDF, copy its text, and paste it in.");
+    if (name.endsWith(".pptx")) return readPptx(await file.arrayBuffer());
+    if (name.endsWith(".pdf")) return readPdf(await file.arrayBuffer());
+    if (/\.(doc|ppt)$/.test(name)) throw new Error("Older .doc and .ppt files can't be read. Save the file as .docx or .pptx, or paste the text.");
     return await file.text();
   }
-  async function readDocx(buf) {
+  // Minimal ZIP reader: returns {path: Uint8Array-producing function}
+  function zipIndex(buf) {
     var dv = new DataView(buf), u8 = new Uint8Array(buf), eocd = -1;
     for (var i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 66000); i--) { if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; } }
-    if (eocd < 0) throw new Error("This doesn't look like a valid .docx file.");
-    var count = dv.getUint16(eocd + 10, true), off = dv.getUint32(eocd + 16, true);
-    var dec = new TextDecoder();
+    if (eocd < 0) throw new Error("This file doesn't look like a valid Office file.");
+    var count = dv.getUint16(eocd + 10, true), off = dv.getUint32(eocd + 16, true), dec = new TextDecoder(), idx = {};
     for (var n = 0; n < count; n++) {
       if (dv.getUint32(off, true) !== 0x02014b50) break;
       var method = dv.getUint16(off + 10, true), csize = dv.getUint32(off + 20, true);
       var nlen = dv.getUint16(off + 28, true), elen = dv.getUint16(off + 30, true), clen = dv.getUint16(off + 32, true), lho = dv.getUint32(off + 42, true);
       var fname = dec.decode(u8.subarray(off + 46, off + 46 + nlen));
-      if (fname === "word/document.xml") {
-        var start = lho + 30 + dv.getUint16(lho + 26, true) + dv.getUint16(lho + 28, true);
-        var data = u8.subarray(start, start + csize), xml;
-        if (method === 0) xml = dec.decode(data);
-        else if (method === 8) {
-          if (typeof DecompressionStream === "undefined") throw new Error("This browser can't open .docx files. Copy and paste the text instead.");
-          xml = await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
-        } else throw new Error("Unsupported .docx compression. Copy and paste the text instead.");
-        return xml.replace(/<w:tab\/>/g, "\t").replace(/<\/w:p>/g, "\n").replace(/<w:br\/>/g, "\n").replace(/<[^>]+>/g, "")
-          .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/\n{3,}/g, "\n\n").trim();
-      }
+      idx[fname] = { method: method, csize: csize, lho: lho };
       off += 46 + nlen + elen + clen;
     }
-    throw new Error("Couldn't find the document text in this .docx file.");
+    async function read(path) {
+      var e = idx[path]; if (!e) return null;
+      var start = e.lho + 30 + dv.getUint16(e.lho + 26, true) + dv.getUint16(e.lho + 28, true);
+      var data = u8.subarray(start, start + e.csize);
+      if (e.method === 0) return dec.decode(data);
+      if (e.method === 8) {
+        if (typeof DecompressionStream === "undefined") throw new Error("This browser can't open Office files. Copy and paste the text instead.");
+        return await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+      }
+      throw new Error("Unsupported file compression. Copy and paste the text instead.");
+    }
+    return { names: Object.keys(idx), read: read };
+  }
+  function unxml(s) { return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&"); }
+  async function readDocx(buf) {
+    var z = zipIndex(buf), xml = await z.read("word/document.xml");
+    if (!xml) throw new Error("Couldn't find the document text in this .docx file.");
+    return unxml(xml.replace(/<w:tab\/>/g, "\t").replace(/<\/w:p>/g, "\n").replace(/<w:br\/>/g, "\n").replace(/<[^>]+>/g, "")).replace(/\n{3,}/g, "\n\n").trim();
+  }
+  function drawingText(xml) {
+    return unxml(xml.replace(/<a:br\/>/g, "\n").replace(/<\/a:p>/g, "\n").replace(/<a:tab\/>/g, "\t").replace(/<[^>]+>/g, ""))
+      .split("\n").map(function (s) { return s.trim(); }).filter(Boolean).join("\n");
+  }
+  async function readPptx(buf) {
+    var z = zipIndex(buf);
+    var slides = z.names.filter(function (n) { return /^ppt\/slides\/slide\d+\.xml$/.test(n); })
+      .sort(function (a, b) { return +a.match(/(\d+)\.xml$/)[1] - +b.match(/(\d+)\.xml$/)[1]; });
+    if (!slides.length) throw new Error("Couldn't find any slides in this .pptx file.");
+    var out = [];
+    for (var i = 0; i < slides.length; i++) {
+      var s = slides[i], text = drawingText(await z.read(s)), notes = "";
+      var rels = await z.read(s.replace("slides/", "slides/_rels/") + ".rels");
+      var m = rels && rels.match(/Target="\.\.\/notesSlides\/(notesSlide\d+\.xml)"/);
+      if (m) {
+        var nx = await z.read("ppt/notesSlides/" + m[1]);
+        if (nx) notes = drawingText(nx).split("\n").filter(function (l) { return !/^\d+$/.test(l); }).join("\n");
+      }
+      var block = "Slide " + (i + 1) + (text ? "\n" + text : "");
+      if (notes) block += "\nInstructions (speaker notes): " + notes;
+      out.push(block);
+    }
+    return out.join("\n\n");
+  }
+  var pdfjsPromise = null;
+  function loadPdfJs() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    if (pdfjsPromise) return pdfjsPromise;
+    pdfjsPromise = new Promise(function (resolve, reject) {
+      var sc = document.createElement("script");
+      sc.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      sc.onload = function () {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        resolve(window.pdfjsLib);
+      };
+      sc.onerror = function () { pdfjsPromise = null; reject(new Error("Reading PDFs needs an internet connection. Connect and try again, or copy the text from the PDF and paste it in.")); };
+      document.head.appendChild(sc);
+    });
+    return pdfjsPromise;
+  }
+  async function readPdf(buf) {
+    var lib = await loadPdfJs(), doc = await lib.getDocument({ data: new Uint8Array(buf) }).promise, pages = [];
+    for (var i = 1; i <= doc.numPages; i++) {
+      var tc = await (await doc.getPage(i)).getTextContent(), line = "", lines = [], lastY = null;
+      tc.items.forEach(function (it) {
+        var y = it.transform ? Math.round(it.transform[5]) : null;
+        if (lastY !== null && y !== null && Math.abs(y - lastY) > 2) { lines.push(line.trim()); line = ""; }
+        line += it.str + (it.hasEOL ? "\n" : " "); lastY = y;
+      });
+      lines.push(line.trim());
+      pages.push(lines.join("\n").replace(/[ \t]+/g, " ").replace(/\n{2,}/g, "\n").trim());
+    }
+    var text = pages.join("\n\n").trim();
+    if (text.length < 20) throw new Error("This PDF has no readable text. It may be a scanned image. Copy the text or type it in.");
+    return text;
   }
   function hookFile(inputId, targetId) {
     $(inputId).addEventListener("change", async function (e) {
       var f = e.target.files[0]; if (!f) return;
-      try { $(targetId).value = await readFile(f); $("inStatus").style.color = ""; $("inStatus").textContent = "Loaded " + f.name + "."; }
+      $("inStatus").style.color = ""; $("inStatus").textContent = "Reading " + f.name + "...";
+      try { var txt = await readFile(f); $(targetId).value = txt; $("inStatus").style.color = ""; $("inStatus").textContent = "Loaded " + f.name + "." + (/\.pdf$/i.test(f.name) && txt.length < 2000 ? " If this PDF came from slides, upload the .pptx instead: PDFs leave out the speaker notes, where instructions often are." : ""); }
       catch (err) { $("inStatus").style.color = "var(--hi)"; $("inStatus").textContent = err.message; }
       e.target.value = "";
     });
@@ -793,7 +897,7 @@
   // ---------------- events ----------------
   $("analyze").onclick = analyze;
   $("clear").onclick = function () {
-    ["outcomes", "assessment", "discipline"].forEach(function (id) { $(id).value = ""; });
+    ["outcomes", "assessment", "discipline", "asmTitleIn"].forEach(function (id) { $(id).value = ""; });
     $("results").classList.add("hidden"); $("piiWarn").classList.add("hidden"); $("inStatus").textContent = ""; LAST = null;
   };
   document.addEventListener("click", function (e) {
@@ -817,6 +921,7 @@
     $("redesign").scrollIntoView({ behavior: "smooth", block: "start" });
   });
   $("expectation").addEventListener("input", function () { if (LAST) buildAssignment($("designPick").value); });
+  $("asmTitleIn").addEventListener("input", function () { if (LAST) buildAssignment($("designPick").value); });
   function asmName(ext) { return asmTitle(LAST.asm).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) + "-genai-redesign." + ext; }
   $("dlWord").onclick = function () { if (!LAST) return; downloadTo("asmStatus", asmName("doc"), "application/msword", assignmentDoc(true)); };
   $("dlLms").onclick = function () { if (!LAST) return; downloadTo("asmStatus", asmName("html"), "text/html;charset=utf-8", assignmentDoc(false)); };
