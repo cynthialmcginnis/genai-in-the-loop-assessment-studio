@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GenAI-in-the-Loop Assessment Studio</title>
+<meta name="description" content="Upload an assessment and its learning outcomes. Get ideas for engineered GenAI use that keeps the outcomes and makes students think harder.">
+<style>
+  :root {
+    --bg: #f5f3ee; --surface: #ffffff; --surface-2: #f9f8f5; --text: #1c2024; --muted: #5a626b;
+    --border: #d8d4cc; --accent: #1d4e89; --accent-text: #fff; --accent-soft: #e4ecf7;
+    --hi: #a33a2b; --hi-soft: #fbe9e6; --mid: #9a6400; --mid-soft: #fff2db; --lo: #1d7a3a; --lo-soft: #e3f4e8;
+    --code: #f1f3f6; --focus: #e8a400; --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 18px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121519; --surface: #1a1e24; --surface-2: #1f242b; --text: #e6e8eb; --muted: #a1aab5;
+      --border: #333a44; --accent: #84b4ec; --accent-text: #0d1117; --accent-soft: #1c2a3b;
+      --hi: #ff8f80; --hi-soft: #3a201c; --mid: #f2b65c; --mid-soft: #33270f; --lo: #6fd68c; --lo-soft: #15301f;
+      --code: #14181d; --focus: #ffcc4d; --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121519; --surface: #1a1e24; --surface-2: #1f242b; --text: #e6e8eb; --muted: #a1aab5;
+    --border: #333a44; --accent: #84b4ec; --accent-text: #0d1117; --accent-soft: #1c2a3b;
+    --hi: #ff8f80; --hi-soft: #3a201c; --mid: #f2b65c; --mid-soft: #33270f; --lo: #6fd68c; --lo-soft: #15301f;
+    --code: #14181d; --focus: #ffcc4d; --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 16.5px; line-height: 1.55; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 56px; }
+  a { color: var(--accent); }
+  header.hero { padding: 36px 0 18px; }
+  .eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+  h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.2; margin: 0 0 10px; letter-spacing: -.01em; }
+  .lede { color: var(--muted); max-width: 70ch; margin: 0; }
+  .flow { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 16px 0 0; padding: 0; list-style: none; font-size: .88rem; }
+  .flow li { background: var(--accent-soft); color: var(--accent); font-weight: 600; padding: 5px 11px; border-radius: 99px; }
+  .privacy { margin-top: 16px; padding: 12px 14px; border-left: 4px solid var(--lo); background: var(--lo-soft); border-radius: 6px; font-size: .93rem; }
+  section.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 0 0 22px; box-shadow: var(--shadow); }
+  @media (max-width: 600px) { section.card { padding: 18px 14px; } }
+  section.card > h2 { margin: 0 0 4px; font-size: 1.35rem; }
+  .sub { color: var(--muted); margin: 0 0 16px; font-size: .95rem; }
+  h3 { font-size: 1.05rem; margin: 20px 0 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 800px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+  label.lbl { display: block; font-weight: 700; margin: 0 0 4px; }
+  .help { display: block; font-weight: 400; color: var(--muted); font-size: .86rem; }
+  textarea, input[type=text], select { width: 100%; font: inherit; font-size: .95rem; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); color: var(--text); }
+  textarea { min-height: 170px; resize: vertical; }
+  textarea:focus-visible, input:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .upload { display: flex; align-items: center; gap: 10px; margin: 8px 0 0; flex-wrap: wrap; font-size: .86rem; color: var(--muted); }
+  .upload input[type=file] { font-size: .86rem; max-width: 100%; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  button { font: inherit; font-weight: 700; font-size: .93rem; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--accent); cursor: pointer; background: transparent; color: var(--accent); }
+  button.primary { background: var(--accent); color: var(--accent-text); padding: 12px 22px; font-size: 1rem; }
+  button.small { padding: 6px 11px; font-size: .84rem; }
+  .warn { margin: 12px 0 0; padding: 10px 14px; border-radius: 6px; background: var(--hi-soft); border-left: 4px solid var(--hi); font-size: .92rem; }
+  .status { min-height: 1.3em; font-size: .9rem; color: var(--lo); margin-top: 6px; }
+  .pill { display: inline-block; font-size: .74rem; font-weight: 800; padding: 3px 9px; border-radius: 99px; letter-spacing: .02em; }
+  .pill.hi { background: var(--hi-soft); color: var(--hi); } .pill.mid { background: var(--mid-soft); color: var(--mid); } .pill.lo { background: var(--lo-soft); color: var(--lo); }
+  .pill.blue { background: var(--accent-soft); color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--border); }
+  th { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .tablewrap { overflow-x: auto; }
+  .meter { height: 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; margin: 6px 0 4px; }
+  .meter > span { display: block; height: 100%; }
+  .stat { border: 1px solid var(--border); border-radius: 10px; padding: 14px; background: var(--surface-2); }
+  .stat .k { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; }
+  .stat .v { font-size: 1.25rem; font-weight: 800; margin-top: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 0; }
+  .chip { font-size: .8rem; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface-2); }
+  .chip.up { border-color: var(--hi); color: var(--hi); } .chip.down { border-color: var(--lo); color: var(--lo); }
+  .design { border: 1px solid var(--border); border-radius: 12px; margin: 0 0 14px; background: var(--surface-2); overflow: hidden; }
+  .design > summary { list-style: none; cursor: pointer; padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .design > summary::-webkit-details-marker { display: none; }
+  .rank { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--accent-text); font-weight: 800; display: grid; place-items: center; }
+  .design h4 { margin: 0; font-size: 1.08rem; }
+  .design .tw { color: var(--muted); font-size: .92rem; margin: 3px 0 0; }
+  .design .body { padding: 0 18px 18px 66px; }
+  @media (max-width: 600px) { .design .body { padding: 0 14px 16px; } }
+  .why { margin: 0 0 10px; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 4px; font-size: .92rem; }
+  .why ul { margin: 4px 0 0; padding-left: 1.2em; }
+  ol.steps { margin: 6px 0 10px; padding-left: 1.3em; } ol.steps li { margin-bottom: 4px; }
+  .kv { display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; font-size: .93rem; margin: 10px 0; }
+  @media (max-width: 600px) { .kv { grid-template-columns: 1fr; } }
+  .kv b { color: var(--muted); }
+  .promptbox { border: 1px solid var(--accent); border-radius: 8px; overflow: hidden; margin: 10px 0; }
+  .promptbox .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 10px; background: var(--accent); color: var(--accent-text); font-size: .84rem; font-weight: 700; }
+  .promptbox .bar button { border-color: var(--accent-text); color: var(--accent-text); padding: 4px 10px; font-size: .8rem; }
+  pre { margin: 0; padding: 12px 14px; background: var(--code); white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .84rem; line-height: 1.5; max-height: 380px; overflow: auto; }
+  details.more > summary { cursor: pointer; font-weight: 700; color: var(--accent); margin: 6px 0; }
+  .muted { color: var(--muted); }
+  .hidden { display: none !important; }
+  footer { color: var(--muted); font-size: .85rem; padding: 6px 0 40px; }
+  @media print {
+    body { background: #fff; font-size: 11pt; } .noprint, .upload, textarea, .privacy, header .flow { display: none !important; }
+    section.card { box-shadow: none; break-inside: avoid-page; } details { display: block; } details > * { display: block !important; }
+    pre { max-height: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <p class="eyebrow">USM GenAI Pedagogy Fellowship · Topic 5 companion tool</p>
+  <h1>GenAI-in-the-Loop Assessment Studio</h1>
+  <p class="lede">Turn an assignment you wrote before GenAI into one where students use GenAI with critical thinking. Upload your assignment exactly as students receive it, plus its learning outcomes. The studio shows where GenAI could now do the work, recommends a design, and rewrites your assignment so students use GenAI at planned steps, keep your outcomes, and are graded on their own judgment.</p>
+  <ul class="flow" aria-label="How it works"><li>1. Upload your assignment</li><li>2. Add its outcomes</li><li>3. Analyze</li><li>4. Choose a design</li><li>5. Get your redesigned assignment</li></ul>
+  <p class="privacy" role="note"><strong>Private by design.</strong> Everything runs in your browser. Nothing you paste or upload is sent anywhere or saved. Share only the assessment instructions and outcomes, never student work, names, or grades.</p>
+</header>
+
+<!-- INPUTS -->
+<section class="card" id="inputs" aria-labelledby="h-in">
+  <h2 id="h-in">Your original assignment</h2>
+  <p class="sub">Paste text or upload a .txt or .docx file. For a PDF, copy its text and paste it in. Any kind of assignment works: essays, problem sets, labs, presentations, debates, role-plays, simulations, case studies, projects, discussion posts, code, and more.</p>
+  <div class="grid2">
+    <div>
+      <label class="lbl" for="outcomes">Learning outcomes for this assignment <span class="help">One per line. They stay exactly the same in the redesign.</span></label>
+      <textarea id="outcomes" placeholder="Example:&#10;Interpret statistical results in context.&#10;Evaluate whether conclusions follow from the data."></textarea>
+      <div class="upload"><label for="fileOut">Upload outcomes:</label><input type="file" id="fileOut" accept=".txt,.md,.docx"></div>
+    </div>
+    <div>
+      <label class="lbl" for="assessment">The assignment, exactly as students receive it <span class="help">Include the title on the first line, the instructions, and the grading criteria.</span></label>
+      <textarea id="assessment" placeholder="Title of the assignment&#10;Instructions...&#10;Grading criteria..."></textarea>
+      <div class="upload"><label for="fileAsm">Upload assignment:</label><input type="file" id="fileAsm" accept=".txt,.md,.docx"></div>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:16px">
+    <div><label class="lbl" for="discipline">Discipline</label><input type="text" id="discipline" placeholder="e.g., Statistics"></div>
+    <div><label class="lbl" for="level">Course level</label>
+      <select id="level"><option>introductory undergraduate</option><option>intermediate undergraduate</option><option>advanced undergraduate</option><option>graduate</option></select></div>
+    <div><label class="lbl" for="access">Can your students use a GenAI tool your institution permits? <span class="help">This changes which designs rank first. Every design also works when you supply the GenAI output.</span></label>
+      <select id="access"><option value="mixed">Some can, or I'm not sure</option><option value="all">Yes, all students can</option><option value="none">No</option></select></div>
+  </div>
+  <div id="piiWarn" class="warn hidden" role="alert"></div>
+  <div class="row noprint" style="margin-top:18px">
+    <button type="button" class="primary" id="analyze">Analyze and redesign</button>
+    <button type="button" id="clear">Clear</button>
+  </div>
+  <p class="status" id="inStatus" role="status" aria-live="polite"></p>
+  <details class="more noprint" style="margin-top:14px"><summary>No assignment handy? Preview the studio with a sample</summary><div class="row" style="margin-top:6px"><label for="sampleSel" class="muted" style="font-size:.9rem">Sample:</label><select id="sampleSel" style="width:auto"><option value="">Choose a sample...</option><option value="stats">Statistics project</option><option value="bib">Annotated bibliography</option><option value="essay">Business strategy essay</option><option value="debate">Policy debate</option><option value="roleplay">Nursing role-play</option></select></div></details>
+</section>
+
+<div id="results" class="hidden">
+  <!-- SUMMARY -->
+  <section class="card" aria-labelledby="h-sum">
+    <h2 id="h-sum">What the studio sees</h2>
+    <p class="sub">A starting point for your judgment, built from patterns in the text. It is not a measurement, and you know your course better than any rule does.</p>
+    <div class="grid3" id="statRow"></div>
+  </section>
+
+  <!-- OUTCOMES -->
+  <section class="card" aria-labelledby="h-out">
+    <h2 id="h-out">Your learning outcomes</h2>
+    <p class="sub">The thinking each outcome asks for, based on its verb. These outcomes do not change in any design below.</p>
+    <div class="tablewrap"><table id="outTable"></table></div>
+  </section>
+
+  <!-- ASSESSMENT -->
+  <section class="card" aria-labelledby="h-asm">
+    <h2 id="h-asm">Where GenAI could do the work now</h2>
+    <p class="sub">Features in the assessment that make it easier or harder for GenAI to produce the work without the learning.</p>
+    <div id="vulnBox"></div>
+  </section>
+
+  <!-- DESIGNS -->
+  <section class="card" aria-labelledby="h-des">
+    <h2 id="h-des">Recommended GenAI-in-the-loop designs</h2>
+    <p class="sub">Ranked by how well each design fits your outcomes and your assessment. Every design keeps your outcomes, grades the student's judgment rather than GenAI's output, works in a fully online course, and has a route for students without GenAI. Open any design to see how it runs and copy its prompt.</p>
+    <div id="designList"></div>
+  </section>
+
+  <!-- REDESIGNED ASSIGNMENT -->
+  <section class="card" id="redesign" aria-labelledby="h-asmout">
+    <h2 id="h-asmout">Your redesigned assignment</h2>
+    <p class="sub">Your assignment, rewritten so students use GenAI at planned steps and are graded on their own judgment. It starts with the top design; choose another design here or from any card above. Click into the assignment to edit it directly.</p>
+    <div class="row noprint" style="margin-bottom:14px"><label for="designPick" class="lbl" style="margin:0">Design:</label><select id="designPick" style="width:auto;max-width:100%"></select></div>
+    <div id="changeSummary" style="margin-bottom:12px"></div>
+    <label class="lbl" for="expectation">How GenAI fits <span class="help">The expectation paragraph in the assignment. Edit it here and it updates below.</span></label>
+    <textarea id="expectation" style="min-height:110px"></textarea>
+    <h3>Student-facing assignment</h3>
+    <div id="asmOut" contenteditable="true" spellcheck="true" aria-label="Redesigned assignment, editable" style="background:#fff;color:#1c2024;border:1px solid var(--border);border-radius:10px;padding:20px 22px;"></div>
+    <div class="row noprint" style="margin-top:14px">
+      <button type="button" class="primary" id="dlWord">Download for Word (.doc)</button>
+      <button type="button" id="dlLms">Download for your LMS (.html)</button>
+      <button type="button" id="copyAsm">Copy text</button>
+    </div>
+    <p class="sub" style="margin-top:8px;font-size:.86rem">The LMS file uses inline formatting, so it keeps its look when pasted into LMS editors that strip style sheets. Review every prompt and rubric weight before giving the assignment to students.</p>
+    <p class="status" id="asmStatus" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- DEEPER -->
+  <section class="card" aria-labelledby="h-deep">
+    <h2 id="h-deep">Go deeper with your own GenAI tool</h2>
+    <p class="sub">This prompt packages your outcomes, your assessment, and the design rules. Paste it into a GenAI tool your institution permits for a fuller, course-specific analysis. Remove anything that identifies a student first.</p>
+    <div class="promptbox"><div class="bar"><span>Deeper-analysis prompt</span><button type="button" data-copy="deepPrompt">Copy</button></div><pre id="deepPrompt" tabindex="0"></pre></div>
+  </section>
+
+  <!-- EXPORT -->
+  <section class="card noprint" aria-labelledby="h-ex">
+    <h2 id="h-ex">Save your plan</h2>
+    <p class="sub">Download a plan with your outcomes, the analysis, the top designs with their prompts, and your expectation statement.</p>
+    <div class="row">
+      <button type="button" class="primary" id="dlHtml">Download plan (.html)</button>
+      <button type="button" id="dlTxt">Download plan (.txt)</button>
+      <button type="button" id="print">Print or save as PDF</button>
+    </div>
+    <p class="status" id="exStatus" role="status" aria-live="polite"></p>
+  </section>
+</div>
+
+<footer>
+  Built for the Workshop-in-a-Box "Beyond AI Detection: Redesigning Authentic Assessments for the GenAI Era," by Molly Barra and Cynthia McGinnis, USM Generative AI Pedagogy Fellowship Program, 2026-2027. Draft. The analysis is rule-based and suggests designs; it does not make any assessment secure or prove who did the work.
+</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function lc(s) { return (s || "").toLowerCase(); }
+
+  // ---------------- Bloom verbs ----------------
+  var LEVELS = ["Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"];
+  var VERBS = {
+    Remember: ["define", "list", "recall", "identify", "name", "state", "recognize", "label", "match", "memorize", "outline", "locate", "find"],
+    Understand: ["explain", "describe", "summarize", "classify", "discuss", "interpret", "paraphrase", "illustrate", "report", "translate", "restate"],
+    Apply: ["apply", "calculate", "compute", "solve", "use", "demonstrate", "implement", "execute", "perform", "operate", "conduct", "administer", "measure", "estimate", "graph", "present", "research", "model"],
+    Analyze: ["analyze", "analyse", "compare", "contrast", "differentiate", "examine", "distinguish", "organize", "investigate", "diagnose", "categorize", "deconstruct", "infer", "test", "relate", "connect", "explore", "predict"],
+    Evaluate: ["evaluate", "assess", "critique", "judge", "justify", "defend", "argue", "appraise", "recommend", "verify", "prioritize", "weigh", "validate", "select", "decide", "choose", "review", "reflect"],
+    Create: ["create", "design", "develop", "compose", "construct", "formulate", "propose", "produce", "plan", "generate", "write", "build", "invent", "author", "synthesize", "integrate", "communicate"]
+  };
+  var VAGUE = ["understand", "know", "learn", "appreciate", "be aware", "become familiar", "grasp", "comprehend", "be exposed"];
+  var VAGUE_FIX = "Replace it with a verb students can show: explain, interpret, apply, compare, evaluate, or design.";
+
+  function classify(outcome) {
+    var t = " " + lc(outcome).replace(/[^a-z\s-]/g, " ") + " ";
+    for (var i = 0; i < VAGUE.length; i++) if (t.indexOf(" " + VAGUE[i] + " ") >= 0) return { verb: VAGUE[i], level: null, vague: true };
+    var best = null;
+    LEVELS.forEach(function (L, li) {
+      VERBS[L].forEach(function (v) {
+        var m = t.match(new RegExp("\\s" + v + "(s|es|d|ed|ing)?\\s"));
+        if (m) { var pos = m.index; if (!best || pos < best.pos || (pos === best.pos && li > best.li)) best = { verb: v, level: L, li: li, pos: pos }; }
+      });
+    });
+    return best ? { verb: best.verb, level: best.level, vague: false } : { verb: null, level: null, vague: false };
+  }
+
+  // ---------------- assessment features ----------------
+  var PRODUCTS = {
+    essay: { label: "Essay or paper", kw: ["essay", "paper", "thesis", "argumentative", "composition", "write a", "research paper", "position paper"] },
+    problems: { label: "Problem set or calculations", kw: ["problem set", "solve", "calculate", "compute", "worksheet", "exercises", "equation", "show your work", "problems"] },
+    bibliography: { label: "Sources or annotated bibliography", kw: ["annotated bibliography", "bibliography", "scholarly sources", "find sources", "locate sources", "literature review", "peer-reviewed", "research sources"] },
+    data: { label: "Data analysis", kw: ["dataset", "data set", "statistic", "survey data", "spreadsheet", "excel", "regression", "hypothesis test", "sample", "variables", "statdisk", "spss"] },
+    presentation: { label: "Presentation or video", kw: ["presentation", "slides", "oral", "video", "speech", "pitch", "record yourself", "narrated"] },
+    discussion: { label: "Discussion post", kw: ["discussion post", "discussion board", "forum", "reply to", "respond to two", "initial post", "peers' posts"] },
+    debate: { label: "Debate", kw: ["debate", "rebuttal", "affirmative", "negative side", "opposing side", "moot", "pro and con", "cross-examination"] },
+    roleplay: { label: "Role-play or simulation", kw: ["role-play", "role play", "roleplay", "simulation", "simulated", "in character", "act as", "mock interview", "mock trial", "standardized patient", "negotiation"] },
+    case: { label: "Case or scenario", kw: ["case study", "case", "scenario", "patient", "client", "vignette"] },
+    code: { label: "Code or technical build", kw: ["code", "program", "script", "algorithm", "function", "python", "java", "sql", "configure", "network"] },
+    proposal: { label: "Proposal or plan", kw: ["proposal", "business plan", "policy brief", "recommendation", "plan for", "propose", "memo"] },
+    reflection: { label: "Reflection", kw: ["reflect", "reflection", "journal", "self-assessment"] },
+    quiz: { label: "Quiz or exam", kw: ["quiz", "exam", "multiple choice", "short answer", "test questions", "midterm", "final exam"] },
+    lab: { label: "Lab or experiment", kw: ["lab report", "experiment", "procedure", "observations", "lab"] }
+  };
+  var SIGNALS = [
+    { id: "finalOnly", up: true, label: "Only a final product is collected", test: function (t) { return !/(draft|outline|checkpoint|proposal stage|milestone|revis|peer review|feedback on)/.test(t); }, note: "GenAI can produce a finished product in one step. Stages make thinking visible." },
+    { id: "summary", up: true, label: "Asks students to summarize or describe", test: function (t) { return /(summari[sz]e|describe|overview|define|explain what)/.test(t); }, note: "Summaries and descriptions are what GenAI does best." },
+    { id: "generic", up: true, label: "Topic is general, not tied to your course", test: function (t) { return !/(our (class|course|discussion|lecture|reading)|week \d|module \d|lecture|course reading|from class|textbook chapter|in class)/.test(t); }, note: "General topics need no course knowledge to answer." },
+    { id: "polish", up: true, label: "Grades emphasize polish or format", test: function (t) { return /(grammar|spelling|apa format|mla format|organization|well written|formatting|length)/.test(t); }, note: "GenAI writes fluent, well-formatted text easily." },
+    { id: "process", up: false, label: "Collects drafts, stages, or feedback", test: function (t) { return /(draft|outline|checkpoint|milestone|revis|peer review|feedback on)/.test(t); }, note: "Stages let you see thinking develop." },
+    { id: "local", up: false, label: "Uses local, personal-interest, or course-specific material", test: function (t) { return /(your (own|community|workplace|unit|career|interest|experience)|local|our (class|course|discussion)|lecture|course reading|in class|week \d)/.test(t); }, note: "Material GenAI has not seen makes generic answers less useful." },
+    { id: "oral", up: false, label: "Includes oral or recorded explanation", test: function (t) { return /(oral|present|video|record|explain your reasoning aloud|walkthrough)/.test(t); }, note: "Explaining in their own voice shows understanding, though recordings can be scripted." },
+    { id: "reasoning", up: false, label: "Asks students to justify choices or show reasoning", test: function (t) { return /(justify|explain why|show your (work|reasoning)|rationale|defend|reflect on (your|the) (choice|decision|process))/.test(t); }, note: "Reasoning tied to the student's own choices is harder to outsource." }
+  ];
+  var QUANT = /(statistic|math|calculus|algebra|finance|accounting|physics|chemistry|engineering|dosage|pharmacology|economics|quantitative|data science|biostat)/;
+
+  // ---------------- designs ----------------
+  var DESIGNS = [
+    { id: "sequence", name: "The engineered problem sequence", short: "GenAI builds a problem; the student solves it, personalizes it, and analyzes GenAI's solution.",
+      why: "Students practice the skill before GenAI can do it, then must understand the problem's structure to personalize it, then judge GenAI's work against their own.",
+      steps: ["Build: students run Prompt A; GenAI creates a new problem with no solution.", "Solve: students solve it without GenAI and submit their work.", "Personalize: students rewrite the problem in a context they care about, predict how the answer will change, and solve their version.", "Check: students run Prompt B on their personalized problem.", "Analyze: students compare GenAI's solution with theirs, step by step, and decide who is right and why."],
+      prompt: "PROMPT A (Build)\nCreate one new practice problem for a {level} course in {discipline}.\nThe problem must require the student to: {outcome}\nSet it in a realistic everyday context. Include all information needed\nto solve it, with units. Make sure it has exactly one correct answer.\nDo NOT include the solution, hints, or the method to use.\n\nPROMPT B (Check)\nSolve the problem below step by step. For each step, state the method\nor rule you are using and why. List every assumption you make. Give\nyour final answer with units and rate your confidence as high, medium,\nor low.\n\nProblem: [student's personalized problem]",
+      submit: "Worked solution, personalized problem with prediction and solution, and a step-by-step comparison with GenAI's solution. Make each a separate, ordered submission.",
+      grade: "Solve 30%, Personalize 25%, Analyze 45%. A wrong GenAI answer the student catches counts as a success.",
+      nogen: "You build a problem bank with Prompt A and supply GenAI solutions for students' personalized problems.",
+      watch: "GenAI sometimes builds unsolvable or ambiguous problems. Spot-check, and reward students who catch them.",
+      lv: { Remember: 1, Understand: 1, Apply: 4, Analyze: 2, Evaluate: 2, Create: 1 }, prod: { problems: 4, data: 2, case: 2, quiz: 2, lab: 1, code: 1 }, quant: 3 },
+    { id: "planted", name: "Find the planted flaws", short: "GenAI writes a polished answer with errors you hid in it. Students hunt for them.",
+      why: "Students must apply your standards line by line to fluent, confident text, which is exactly how GenAI output must be read. You hold the answer key.",
+      steps: ["Run the prompt and keep the instructor key; check every error yourself.", "Give students the response without the key.", "Students find, explain, and correct each error, citing course materials."],
+      prompt: "Write a sample student response to the assignment below for a {level}\ncourse in {discipline}. Make it sound confident and well organized, but\ninclude exactly 3 errors:\n- one factual error\n- one error in reasoning\n- one error related to this outcome: {outcome}\nDo not mark or hint at the errors in the response.\nAfter the response, add a section titled INSTRUCTOR KEY listing each\nerror, where it appears, and why it is wrong.\n\nAssignment: {assessment}",
+      submit: "An error log: location, what is wrong, the correction, and the course source that supports it.",
+      grade: "Errors found and correctly explained. Extra credit for real errors GenAI added by accident.",
+      nogen: "The same: you generate the response once and give it to every student.",
+      watch: "GenAI sometimes adds unplanned errors or fails to plant one. Check the key.",
+      lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 3, Evaluate: 4, Create: 0 }, prod: { essay: 3, problems: 1, lab: 2, code: 2, case: 1, discussion: 1, data: 1 }, quant: 0 },
+    { id: "breakbot", name: "Break the bot", short: "Students find a question GenAI answers confidently but wrongly, and explain why it failed.",
+      why: "To make GenAI fail, students must know where the topic gets subtle: edge cases, misconceptions, and conditions where a rule breaks.",
+      steps: ["Students try course-topic questions until GenAI gives a confident wrong or misleading answer.", "They establish the correct answer from course materials or reliable sources.", "They explain what went wrong and why GenAI likely failed."],
+      prompt: "Answer as an expert in {discipline}. Show your reasoning step by step\nand state how confident you are in your answer.\n\nQuestion: [student's question about: {outcome}]",
+      submit: "The question, GenAI's answer, the correct answer with evidence, and an explanation of the failure.",
+      grade: "Quality of the explanation. Reward near misses such as oversimplified answers.",
+      nogen: "You run students' proposed questions, or students analyze failures you collected.",
+      watch: "Keep it to course content, not wordplay tricks.",
+      lv: { Remember: 1, Understand: 3, Apply: 1, Analyze: 3, Evaluate: 2, Create: 0 }, prod: { quiz: 3, discussion: 2, code: 2, reflection: 1 }, quant: 1 },
+    { id: "expert", name: "Write the expert's prompt", short: "Students write the prompt that would produce an expert answer, then grade what comes back.",
+      why: "A precise prompt is a specification. Students must state the standards and pitfalls an expert would attend to; weak understanding shows up as vague prompts.",
+      steps: ["Students write a prompt stating what an expert answer must include and avoid.", "They run it and evaluate the output against their own criteria.", "They revise the prompt once and explain what the revision fixed."],
+      prompt: "Act as [expert role in {discipline}] completing this task: {assessment}\nYour answer must:\n1. [standard an expert would apply]\n2. [constraint from the course]\n3. [evidence or method it must use]\nAvoid: [common mistake in the field]\nJudge your answer by: [standard of quality tied to: {outcome}]",
+      submit: "Both prompt versions, both outputs, and an evaluation of each against the criteria.",
+      grade: "Disciplinary precision of the prompt and quality of the evaluation, not GenAI's polish.",
+      nogen: "Students write the prompt and criteria; you run it and return the output.",
+      watch: "Require course-specific criteria so students cannot copy generic prompt formulas.",
+      lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 3, Create: 4 }, prod: { essay: 2, proposal: 3, presentation: 1, code: 1 }, quant: 0 },
+    { id: "grade", name: "Grade the bot", short: "Students score several GenAI-written submissions with your rubric; you grade their grading.",
+      why: "Applying a rubric forces students to understand what quality looks like in your course, and comparing their scores with yours shows where their sense of quality is off.",
+      steps: ["Generate three responses of different quality and score them yourself first.", "Students score each with your rubric and justify every score with quotes.", "Share your scores; students explain any gap of more than one level."],
+      prompt: "Write three different responses to the assignment below for a\n{level} course in {discipline}:\n- one excellent\n- one adequate\n- one weak but polished and confident\nDo not label them, and present them in random order. Then add a section\ntitled INSTRUCTOR KEY identifying which is which.\n\nAssignment: {assessment}",
+      submit: "Scores, quoted justifications, and an explanation of any gap from your scores.",
+      grade: "Accuracy and justification of scores, especially on the weak but polished response.",
+      nogen: "The same: you supply the three responses.",
+      watch: "Check the key. The 'excellent' response is not always excellent.",
+      lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 4, Create: 0 }, prod: { essay: 3, discussion: 2, lab: 1, presentation: 1, proposal: 1, reflection: 1 }, quant: 0 },
+    { id: "disagree", name: "When the models disagree", short: "Students ask two GenAI tools the same question and settle the differences with evidence.",
+      why: "Disagreement shows that GenAI output is generated, not looked up, and settling it requires weighing claims against sources.",
+      steps: ["Students ask the same question in two tools or two fresh sessions.", "They list every difference in facts, reasoning, or emphasis.", "They resolve each difference with course materials or reliable sources."],
+      prompt: "[Use the identical prompt in both tools]\n\n{outcome_q}\nGive your answer, state the assumptions you made, and rate your\nconfidence in each main claim as high, medium, or low.",
+      submit: "A comparison table of disagreements, with the resolution and source for each.",
+      grade: "Whether students find meaningful differences and resolve them with credible evidence.",
+      nogen: "You supply two pre-generated answers.",
+      watch: "Both answers can agree and both be wrong. Ask students to check one shared claim too.",
+      lv: { Remember: 1, Understand: 1, Apply: 0, Analyze: 3, Evaluate: 3, Create: 0 }, prod: { bibliography: 2, discussion: 2, case: 1, essay: 1 }, quant: 0 },
+    { id: "verify", name: "Verify the sources", short: "GenAI produces sources or claims; students check each one, flag inventions, and replace them.",
+      why: "GenAI can invent sources that look real, so verification exercises exactly the judgment research assignments are meant to build.",
+      steps: ["Students have GenAI produce a short annotated list of sources on their question.", "They check each source in library databases: does it exist, is it described accurately, is it credible?", "They replace invented or weak sources with ones they find and explain what made each trustworthy."],
+      prompt: "Write an annotated bibliography of five scholarly sources on this\nresearch question for a {level} course in {discipline}:\n[student's research question]\nFor each source give the full citation and a three-sentence annotation\non its argument and relevance.",
+      submit: "A verification log, replacement sources with library links or DOIs, and a short explanation of what makes a source trustworthy.",
+      grade: "Thoroughness of verification and the quality of the credibility reasoning.",
+      nogen: "You supply one pre-generated bibliography for the class to verify.",
+      watch: "Limit the number of sources; verification takes time. Make sure students can reach library databases.",
+      lv: { Remember: 1, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 3, Create: 0 }, prod: { bibliography: 5, essay: 1 }, quant: 0 },
+    { id: "predict", name: "Predict, then prompt", short: "Students predict what GenAI will get wrong, submit the prediction, then compare.",
+      why: "Predicting forces students to reason about the problem and about GenAI's weaknesses; the gap between prediction and result becomes reflection.",
+      steps: ["Students submit a prediction first, as its own LMS submission.", "They run the prompt and compare the output with their prediction.", "They explain what surprised them and what it shows about the topic or the tool."],
+      prompt: "STEP 1 (submit before using GenAI):\n\"I predict GenAI will answer ___ and will likely miss or get wrong ___\nbecause ___.\"\n\nSTEP 2 (the prompt to run):\n{outcome_q} Explain your reasoning.",
+      submit: "Timestamped prediction, the output, and a reflection on the gap.",
+      grade: "The reasoning behind the prediction and the depth of reflection. Wrong predictions can earn full credit.",
+      nogen: "You run the prompt after predictions are submitted and share the output.",
+      watch: "Keep the two submissions separate; that is what makes it work online.",
+      lv: { Remember: 1, Understand: 3, Apply: 2, Analyze: 1, Evaluate: 1, Create: 0 }, prod: { problems: 2, code: 2, quiz: 1, reflection: 2, lab: 1 }, quant: 1 },
+    { id: "argue", name: "Argue the other side", short: "GenAI builds the strongest case against the student's position; the student rebuts it with evidence and refines their own case.",
+      why: "Students must take the opposing view seriously, separate strong objections from weak ones, and support their rebuttal with evidence, which is the core of debate and argument.",
+      steps: ["Students state their position and main evidence.", "GenAI produces the strongest opposing case.", "Students write a rebuttal with evidence, concede valid points, and explain how their position changed."],
+      prompt: "I am preparing to argue this position in a {level} course in\n{discipline}: [student's position and main evidence]\nWrite the strongest opposing case a well-prepared opponent would make,\nwith three arguments and the evidence each relies on. Do not argue for\nmy side and do not weaken the opposing arguments.",
+      submit: "The opposing case, a rebuttal with cited evidence, and a short note on what changed in their position.",
+      grade: "The rebuttal: how well students answer the strongest objections and what they concede, not the GenAI case.",
+      nogen: "You supply an opposing case for each common position, or classmates write them.",
+      watch: "GenAI may produce a weak straw man. Ask for the strongest version, and check its evidence claims.",
+      lv: { Remember: 0, Understand: 1, Apply: 1, Analyze: 2, Evaluate: 4, Create: 2 }, prod: { debate: 5, essay: 2, discussion: 2, proposal: 1, presentation: 1 }, quant: 0 },
+    { id: "skeptic", name: "Face the skeptic", short: "GenAI plays a demanding professional stakeholder, such as a reviewer, client, or patient's family member, who challenges the student's work or responses.",
+      why: "Students defend their reasoning, decide which objections are valid, and revise; the memo shows judgment more clearly than the proposal alone.",
+      steps: ["Students prepare a proposal, argument, or plan for a professional conversation.", "GenAI plays the stakeholder and raises challenges one at a time; students respond to each.", "Students revise and write a memo on what they changed, defended, and why."],
+      prompt: "You are a [professional role in {discipline}, e.g., reviewer, manager,\nclient] reviewing the work below. Raise the three strongest objections\nsomeone in your role would raise, one at a time. After each of my\nresponses, say whether it resolves the objection and why. Do not\nrewrite my work.\n\nWork: [student's proposal or argument]",
+      submit: "An excerpt of the exchange, the revised work, and the memo.",
+      grade: "The memo: which objections were accepted or rejected, and how well each choice is justified.",
+      nogen: "A classmate or the instructor raises written objections in a discussion post.",
+      watch: "Professional roles only. Never have GenAI speak as a member of a demographic group.",
+      lv: { Remember: 0, Understand: 0, Apply: 1, Analyze: 1, Evaluate: 3, Create: 3 }, prod: { proposal: 4, essay: 2, presentation: 2, case: 1, debate: 3, roleplay: 4 }, quant: 0 },
+    { id: "audit", name: "Audit the synthetic data", short: "Students design a scenario, GenAI generates the dataset, and students audit it before analyzing it without GenAI.",
+      why: "Students care about data on a topic they chose, and auditing it uses the same statistical thinking as the analysis.",
+      steps: ["Students design the scenario, questions, and variables.", "They generate the dataset and audit it with summary statistics and graphs.", "They analyze it without GenAI and report."],
+      prompt: "Create a realistic dataset of [n] observations for this scenario:\n[student's scenario]\nVariables:\n- [numeric variable 1, with units]\n- [numeric variable 2, with units]\n- [qualitative variable 1, with categories]\n- [qualitative variable 2, with categories]\n- [binary variable]\nMake the values realistic for [population]. Return the data as a table\nI can paste into Excel, with one row per observation.",
+      submit: "The prompt, the dataset, an audit report with evidence, and the analysis.",
+      grade: "The audit's statistical evidence and the analysis done without GenAI.",
+      nogen: "You generate the dataset from the student's scenario.",
+      watch: "Generated data is for learning only; students must not present it as real research data.",
+      lv: { Remember: 0, Understand: 1, Apply: 2, Analyze: 3, Evaluate: 2, Create: 1 }, prod: { data: 5, lab: 2 }, quant: 2 }
+  ];
+
+  // ---------------- analysis ----------------
+  function parseOutcomes(text) {
+    return text.split(/\r?\n/).map(function (s) { return s.replace(/^\s*([-*•]|\d+[.)]|[a-z][.)])\s*/i, "").trim(); }).filter(function (s) { return s.length > 3; });
+  }
+  function detectProducts(t) {
+    var found = [];
+    Object.keys(PRODUCTS).forEach(function (k) {
+      var hits = PRODUCTS[k].kw.filter(function (w) { return t.indexOf(w) >= 0; });
+      if (hits.length) found.push({ key: k, label: PRODUCTS[k].label, hits: hits.length * (k === "roleplay" || k === "debate" ? 2 : 1) });
+    });
+    return found.sort(function (a, b) { return b.hits - a.hits; });
+  }
+  function piiScan(text) {
+    var issues = [];
+    if (/[\w.+-]+@[\w-]+\.[\w.]+/.test(text)) issues.push("an email address");
+    if (/\b\d{7,}\b/.test(text)) issues.push("a long ID-like number");
+    if (/(student name|student id|grade:|score:\s*\d)/i.test(text)) issues.push("what looks like a student name, ID, or grade");
+    return issues;
+  }
+
+  function analyze() {
+    var outcomesText = $("outcomes").value.trim(), asm = $("assessment").value.trim();
+    if (!outcomesText || !asm) { $("inStatus").style.color = "var(--hi)"; $("inStatus").textContent = "Add both your learning outcomes and the assessment instructions."; return; }
+    $("inStatus").style.color = ""; $("inStatus").textContent = "";
+    var pii = piiScan(outcomesText + "\n" + asm);
+    $("piiWarn").classList.toggle("hidden", !pii.length);
+    if (pii.length) $("piiWarn").innerHTML = "<strong>Check before sharing:</strong> the text seems to include " + esc(pii.join(", ")) + ". Remove anything that identifies a student, especially before using the deeper-analysis prompt.";
+
+    var ctx = { discipline: $("discipline").value.trim() || "your discipline", level: $("level").value, access: $("access").value };
+    var outs = parseOutcomes(outcomesText).map(function (o) { var c = classify(o); c.text = o; return c; });
+    var t = lc(asm), all = lc(asm + " " + ctx.discipline + " " + outcomesText);
+    var products = detectProducts(t);
+    var sigs = SIGNALS.map(function (s) { return { s: s, on: s.test(t) }; });
+    var up = sigs.filter(function (x) { return x.on && x.s.up; }).length, down = sigs.filter(function (x) { return x.on && !x.s.up; }).length;
+    var vscore = up * 2 - down * 1.5 + (products.some(function (p) { return ["essay", "discussion", "quiz", "bibliography"].indexOf(p.key) >= 0; }) ? 1.5 : 0);
+    var vlevel = vscore >= 4.5 ? "High" : vscore >= 2 ? "Moderate" : "Lower";
+    var quant = QUANT.test(all);
+
+    // score designs
+    var levelCounts = {}; LEVELS.forEach(function (L) { levelCounts[L] = 0; });
+    outs.forEach(function (o) { if (o.level) levelCounts[o.level]++; });
+    var scored = DESIGNS.map(function (d) {
+      var s = 0, reasons = [];
+      outs.forEach(function (o, i) {
+        if (o.level && d.lv[o.level] >= 3) { s += d.lv[o.level]; reasons.push("Outcome " + (i + 1) + " asks students to " + o.verb + (o.verb === o.level.toLowerCase() ? "" : " (" + o.level.toLowerCase() + "-level thinking)") + ", which this design exercises directly."); }
+        else if (o.level) s += d.lv[o.level];
+      });
+      products.forEach(function (p) { if (d.prod[p.key]) { s += d.prod[p.key] * 1.5; if (d.prod[p.key] >= 2) reasons.push("Your assessment type (" + p.label.toLowerCase() + ") is a strong fit for this design."); } });
+      if (quant && d.quant) { s += d.quant * 1.5; reasons.push("Quantitative disciplines suit this design well."); }
+      if (ctx.access === "none" && /verify|disagree|breakbot|expert|predict/.test(d.id)) { s -= 2; }
+      return { d: d, score: s, reasons: reasons.filter(function (r, i, a) { return a.indexOf(r) === i; }).slice(0, 3) };
+    }).sort(function (a, b) { return b.score - a.score; });
+
+    var firstOutcome = (outs.find(function (o) { return o.level && /Apply|Analyze|Evaluate|Create/.test(o.level); }) || outs[0] || { text: "[your learning outcome]" }).text;
+    var excerpt = asm.replace(/\s+/g, " ").slice(0, 600) + (asm.length > 600 ? " [...]" : "");
+    var fill = function (tpl) {
+      return tpl.replace(/\ba \{level\}/g, (/^[aeiou]/i.test(ctx.level) ? "an " : "a ") + ctx.level).replace(/\{discipline\}/g, ctx.discipline).replace(/\{level\}/g, ctx.level).replace(/\{outcome\}/g, firstOutcome)
+        .replace(/\{outcome_q\}/g, "[A question from your course that requires students to: " + firstOutcome + "]").replace(/\{assessment\}/g, excerpt);
+    };
+
+    render({ ctx: ctx, outs: outs, products: products, sigs: sigs, vlevel: vlevel, scored: scored, fill: fill, asm: asm, outcomesText: outcomesText, quant: quant });
+  }
+
+  var LAST = null;
+  function render(R) {
+    LAST = R;
+    var top = R.scored[0];
+    var vague = R.outs.filter(function (o) { return o.vague; }).length;
+    var maxLevel = R.outs.reduce(function (m, o) { return o.level ? Math.max(m, LEVELS.indexOf(o.level)) : m; }, -1);
+    var vClass = R.vlevel === "High" ? "hi" : R.vlevel === "Moderate" ? "mid" : "lo";
+    $("statRow").innerHTML =
+      stat("Outcomes found", R.outs.length + (vague ? ' <span class="pill mid">' + vague + " vague</span>" : "")) +
+      stat("Highest thinking level", maxLevel >= 0 ? LEVELS[maxLevel] : "Not detected") +
+      stat("GenAI could do much of it", '<span class="pill ' + vClass + '">' + R.vlevel + "</span>") +
+      stat("Assessment type", R.products.length ? esc(R.products[0].label) : "Not detected") +
+      stat("Top design", esc(top.d.name)) +
+      stat("Students can use GenAI", R.ctx.access === "all" ? "Yes, all" : R.ctx.access === "none" ? "No" : "Some, or not sure");
+
+    var rows = '<thead><tr><th>#</th><th>Outcome</th><th>Verb</th><th>Thinking</th><th>Note</th></tr></thead><tbody>';
+    R.outs.forEach(function (o, i) {
+      var note = o.vague ? '<span class="pill mid">Vague</span> "' + esc(o.verb) + '" is hard to observe. ' + VAGUE_FIX : !o.level ? "No recognized verb. Start the outcome with an observable verb." : (LEVELS.indexOf(o.level) <= 1 ? "Lower-level thinking. GenAI can usually produce this, so pair it with a judgment step." : "Higher-level thinking. Keep this step with the student.");
+      rows += "<tr><td>" + (i + 1) + "</td><td>" + esc(o.text) + "</td><td>" + esc(o.verb || "none") + "</td><td>" + (o.level ? '<span class="pill blue">' + o.level + "</span>" : "") + "</td><td>" + note + "</td></tr>";
+    });
+    $("outTable").innerHTML = rows + "</tbody>";
+
+    var v = '<div class="grid2"><div><p><strong>Overall:</strong> GenAI could produce much of this assessment without the intended learning: <span class="pill ' + vClass + '">' + R.vlevel + '</span></p>';
+    v += "<p><strong>Assessment type:</strong> " + (R.products.length ? R.products.map(function (p) { return esc(p.label); }).join(", ") : "not detected from the text") + "</p></div>";
+    v += '<div><p class="muted" style="margin:0">Red chips raise the chance that GenAI can do the work; green chips lower it. None of these make an assessment secure.</p><div class="chips">';
+    R.sigs.forEach(function (x) { if (x.on) v += '<span class="chip ' + (x.s.up ? "up" : "down") + '" title="' + esc(x.s.note) + '">' + (x.s.up ? "&#9650; " : "&#9660; ") + esc(x.s.label) + "</span>"; });
+    v += "</div></div></div>";
+    v += '<details class="more"><summary>What each signal means</summary><div class="tablewrap"><table><thead><tr><th>Signal</th><th>Found?</th><th>Why it matters</th></tr></thead><tbody>';
+    R.sigs.forEach(function (x) { v += "<tr><td>" + esc(x.s.label) + "</td><td>" + (x.on ? "Yes" : "No") + "</td><td>" + esc(x.s.note) + "</td></tr>"; });
+    v += "</tbody></table></div></details>";
+    $("vulnBox").innerHTML = v;
+
+    var html = "";
+    R.scored.forEach(function (sc, i) {
+      var d = sc.d, open = i === 0 ? " open" : "";
+      html += '<details class="design"' + open + "><summary><span class=\"rank\">" + (i + 1) + "</span><span><h4>" + esc(d.name) + (i < 3 ? ' <span class="pill blue">Top match</span>' : "") + '</h4><p class="tw">' + esc(d.short) + "</p></span></summary><div class=\"body\">";
+      if (sc.reasons.length) html += '<div class="why"><strong>Why it fits your assessment</strong><ul>' + sc.reasons.map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul></div>";
+      html += "<p><strong>Why it builds thinking:</strong> " + esc(d.why) + "</p><p><strong>How it runs</strong></p><ol class=\"steps\">" + d.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>";
+      html += '<div class="promptbox"><div class="bar"><span>Copy-ready prompt, filled with your details (edit the [brackets])</span><button type="button" data-copy="p_' + d.id + '">Copy</button></div><pre id="p_' + d.id + '">' + esc(R.fill(d.prompt)) + "</pre></div>";
+      if (R.ctx.access === "none") html += '<div class="why"><strong>No-GenAI route (your students can\'t use a tool):</strong> ' + esc(d.nogen) + '</div>';
+      html += '<div class="kv"><b>Students submit</b><span>' + esc(d.submit) + "</span><b>Grade</b><span>" + esc(d.grade) + "</span><b>No-GenAI route</b><span>" + esc(d.nogen) + "</span><b>Watch for</b><span>" + esc(d.watch) + '</span></div><button type="button" class="noprint" data-use="' + d.id + '">Build my assignment with this design</button></div></details>';
+    });
+    $("designList").innerHTML = html;
+    $("designPick").innerHTML = R.scored.map(function (sc, i) { return '<option value="' + sc.d.id + '">' + (i + 1) + ". " + esc(sc.d.name) + "</option>"; }).join("");
+
+    $("expectation").value = expectation(top.d, R);
+    $("deepPrompt").textContent = deepPrompt(R);
+    buildAssignment(top.d.id);
+    $("results").classList.remove("hidden");
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function stat(k, v) { return '<div class="stat"><div class="k">' + k + '</div><div class="v">' + v + "</div></div>"; }
+
+  var JOBS = {
+    argue: ["build the strongest case against your position", "rebut it with evidence, concede what is valid, and explain how your position changed"],
+    sequence: ["build a practice problem for you, and later to solve your personalized version", "solve the problem yourself, personalize it, and analyze where GenAI's solution differs from yours"],
+    planted: ["provide a sample response that contains errors", "find, explain, and correct each error using course materials"],
+    breakbot: ["answer the questions you test it with", "find where it fails and explain why, using course evidence"],
+    expert: ["respond to the prompt you write", "write a precise expert prompt and evaluate what comes back against your own criteria"],
+    grade: ["provide sample submissions", "score them with the course rubric and justify every score"],
+    disagree: ["answer the same question in two tools", "find the disagreements and resolve each with evidence"],
+    verify: ["produce a starting list of sources", "verify every source, replace weak or invented ones, and explain what makes a source trustworthy"],
+    predict: ["answer the question after you have predicted its errors", "predict, compare, and reflect on the gap"],
+    skeptic: ["play a professional stakeholder who challenges your work", "respond, revise, and explain what you changed and why"],
+    audit: ["generate a dataset from the scenario you design", "audit the data for realism and analyze it without GenAI"]
+  };
+  function expectation(d, R) {
+    var j = JOBS[d.id];
+    return "In this assignment, GenAI's job is to " + j[0] + ". Your job is to " + j[1] + ", and that is what I grade. " +
+      "Do not use GenAI for any other part of the assignment. Record each prompt you use, what GenAI returned, and what you kept, changed, or rejected, with your reasons. " +
+      "Why: this assignment shows that you can " + lcFirst(firstOf(R.outs)) + ". GenAI gives you material to work with; your judgment is the evidence of learning. " +
+      "If you cannot or prefer not to use GenAI, tell me and I will provide the GenAI output so you can do the same work.";
+  }
+  function firstOf(outs) { var o = outs.find(function (x) { return x.level && LEVELS.indexOf(x.level) >= 2; }) || outs[0]; return o ? o.text.replace(/\.$/, "") : "meet the course outcomes"; }
+  function lcFirst(s) { return s ? s.charAt(0).toLowerCase() + s.slice(1) : s; }
+
+  function deepPrompt(R) {
+    var L = [];
+    L.push("You are an instructional designer helping a faculty member redesign an assessment so students use GenAI in planned ways that strengthen critical thinking.");
+    L.push("");
+    L.push("CONTEXT");
+    L.push("- Discipline: " + R.ctx.discipline);
+    L.push("- Course level: " + R.ctx.level);
+    L.push("- Students' GenAI access: " + ({ mixed: "mixed or unknown", all: "all students have a permitted tool", none: "no permitted tool" })[R.ctx.access]);
+    L.push("- Assume a fully online, asynchronous course with no proctored work unless told otherwise.");
+    L.push("");
+    L.push("LEARNING OUTCOMES (do not change these)");
+    R.outs.forEach(function (o, i) { L.push((i + 1) + ". " + o.text); });
+    L.push("");
+    L.push("ASSESSMENT");
+    L.push(R.asm);
+    L.push("");
+    L.push("TASKS");
+    L.push("1. For each outcome, name the thinking it requires and where in the assessment students do that thinking.");
+    L.push("2. Identify the specific steps GenAI could now complete without the intended learning.");
+    L.push("3. Propose two GenAI pairings. For each, give: GenAI's role; the thinking move students must do themselves; what students submit; how to grade the student's judgment; a copy-ready prompt students would use; and a no-GenAI route in which the instructor supplies the output.");
+    L.push("   Consider these designs: " + DESIGNS.map(function (d) { return d.name + " (" + d.short + ")"; }).join("; "));
+    L.push("4. Rewrite my full assignment for students using the stronger pairing: keep my learning outcomes and original task, add the GenAI steps with copy-ready prompts, list what students submit (student work due before GenAI steps where possible), give a rubric weighted toward the student's judgment, state the GenAI-use expectation in plain language, and include a route for students who cannot or choose not to use GenAI.");
+    L.push("");
+    L.push("RULES");
+    L.push("- Keep the original learning outcomes. Grade the student's judgment, never GenAI's output.");
+    L.push("- Every step must work in a fully online, asynchronous course.");
+    L.push("- Never claim the redesign makes the assessment AI-proof or secure. Do not suggest detection tools, surveillance, or proctoring.");
+    L.push("- Use professional roles only for any GenAI role-play, and fictional cases in health or other sensitive fields.");
+    L.push("- Ask me one question first if something essential is missing.");
+    return L.join("\n");
+  }
+
+  // ---------------- export ----------------
+  // ---------------- redesigned assignment builder ----------------
+  // Student-facing version of each design. Steps refer to "the original task" shown in the assignment.
+  var STUDENT = {
+    sequence: { needsTool: true,
+      steps: ["Run Prompt A below. GenAI will create a new problem like the ones in the original task. Do not ask it for the solution.",
+              "Solve the problem yourself, without GenAI, and show every step. Submit this first.",
+              "Personalize the problem: rewrite it in a context you care about and change at least two values or conditions. Predict how the answer will change, then solve your version without GenAI.",
+              "Run Prompt B with your personalized problem. GenAI will solve it step by step.",
+              "Compare GenAI's solution with yours, step by step. For every difference, decide who is right and explain how you know."],
+      submit: ["Your worked solution to the generated problem (submit first)", "Your personalized problem, your prediction, and your solution", "A comparison table and a short reflection"],
+      rubric: [["Solving the generated problem: correct method and complete work", 30], ["Personalized problem: same concept, meaningful changes, reasoned prediction", 25], ["Analysis of GenAI's solution: every difference found and resolved with evidence", 35], ["Reflection: what the comparison shows about the method and about GenAI", 10]] },
+    planted: { needsTool: false,
+      steps: ["Your instructor will give you a response to the original task. GenAI wrote it, and it contains errors.",
+              "Find the errors. For each one, explain what is wrong and correct it, citing course materials.",
+              "Complete the original task yourself, using what you learned from the errors."],
+      submit: ["An error log: where each error is, what is wrong, the correction, and your source", "Your own completed original task"],
+      rubric: [["Errors found and correctly explained", 35], ["Corrections supported by course sources", 20], ["Your completed task meets the original criteria", 45]] },
+    breakbot: { needsTool: true,
+      steps: ["Complete the original task.",
+              "Test GenAI with questions on the same topic. Find one it answers confidently but wrongly or incompletely.",
+              "Establish the correct answer from course materials or reliable sources, and explain why GenAI likely failed."],
+      submit: ["Your completed original task", "Your question, GenAI's answer, the correct answer with evidence, and your explanation of the failure"],
+      rubric: [["Completed task meets the original criteria", 50], ["Question targets a subtle point in the topic", 15], ["Explanation of the failure, supported by evidence", 35]] },
+    expert: { needsTool: true,
+      steps: ["Write a prompt that would make GenAI produce an expert-level response to the original task. State the standards, constraints, and common mistakes an expert in this field would attend to.",
+              "Run your prompt and evaluate the response against your own criteria.",
+              "Revise your prompt once, run it again, and explain what the revision fixed and what GenAI still got wrong."],
+      submit: ["Both versions of your prompt", "Both GenAI responses", "Your evaluation of each response"],
+      rubric: [["Precision of the prompt: course standards, constraints, and pitfalls named", 35], ["Evaluation of the responses against the criteria", 45], ["Explanation of the revision", 20]] },
+    grade: { needsTool: false,
+      steps: ["Your instructor will give you three responses to the original task. GenAI wrote them, and they differ in quality.",
+              "Score each response with the course rubric. Justify every score with quotes from the response.",
+              "Compare your scores with your instructor's and explain any difference of more than one level."],
+      submit: ["Your scores with quoted justifications", "An explanation of any differences from your instructor's scores"],
+      rubric: [["Accuracy of your scores", 30], ["Justifications supported by quotes and the rubric", 45], ["Explanation of differences", 25]] },
+    disagree: { needsTool: true,
+      steps: ["Complete the original task.",
+              "Ask two GenAI tools, or one tool in two new sessions, the same question related to the task, using the prompt below.",
+              "List every difference between the answers and resolve each one with course materials or reliable sources. Check at least one claim the answers agree on, too."],
+      submit: ["Your completed original task", "A comparison table: each difference, which answer is right, and your source"],
+      rubric: [["Completed task meets the original criteria", 50], ["Meaningful differences identified", 20], ["Each difference resolved with credible evidence", 30]] },
+    verify: { needsTool: true,
+      steps: ["Use the prompt below to have GenAI produce a starting list of sources for your question.",
+              "Check every source in the library databases. Does it exist? Is it described accurately? Is it credible and relevant? Flag any source that is invented or misrepresented.",
+              "Replace weak or invented sources with ones you find yourself, then complete the original task with your verified sources."],
+      submit: ["GenAI's list of sources", "Your verification log", "Your completed original task, using verified sources"],
+      rubric: [["Verification: every source checked and problems found", 35], ["Explanation of what makes a source trustworthy", 20], ["Completed task meets the original criteria with verified sources", 45]] },
+    predict: { needsTool: true,
+      steps: ["Before using GenAI, write a prediction: how will GenAI answer a question from this task, and what will it get wrong or miss? Submit your prediction first.",
+              "Run the prompt below and compare GenAI's answer with your prediction.",
+              "Complete the original task, then reflect on what surprised you and what it shows about the topic or about GenAI."],
+      submit: ["Your prediction (submit first)", "GenAI's answer", "Your completed original task and reflection"],
+      rubric: [["Reasoning behind the prediction", 20], ["Comparison of prediction and result", 20], ["Completed task meets the original criteria", 40], ["Reflection", 20]] },
+    argue: { needsTool: true,
+      steps: ["Complete the original task, taking a clear position supported by evidence.",
+              "Use the prompt below to have GenAI build the strongest case against your position.",
+              "Write a rebuttal: answer each opposing argument with evidence, concede what is valid, and revise your work."],
+      submit: ["Your original work", "GenAI's opposing case", "Your rebuttal, your revised work, and a note on what changed in your position"],
+      rubric: [["Original work meets the original criteria", 40], ["Rebuttal answers the strongest objections with evidence", 40], ["Note on what changed and why", 20]] },
+    skeptic: { needsTool: true,
+      steps: ["Complete the original task.",
+              "Use the prompt below. GenAI will play a professional stakeholder and challenge your work one point at a time. Respond to each challenge.",
+              "Revise your work and write a memo on what you changed, what you defended, and why."],
+      submit: ["Your original work", "An excerpt of the exchange", "Your revised work and memo"],
+      rubric: [["Original work meets the original criteria", 40], ["Responses to the challenges", 25], ["Memo: justified decisions about what to change or defend", 35]] },
+    audit: { needsTool: true,
+      steps: ["Design your scenario: the questions you want to answer and the variables you will study.",
+              "Use the prompt below to have GenAI generate a dataset for your scenario.",
+              "Audit the data with summary statistics and graphs. Is it realistic? Report any problems you find.",
+              "Complete the original analysis without GenAI, using your dataset."],
+      submit: ["Your scenario and variables", "Your prompt and the dataset", "Your audit report", "Your completed analysis"],
+      rubric: [["Scenario and variables", 10], ["Audit supported by statistical evidence", 30], ["Analysis completed without GenAI meets the original criteria", 60]] }
+  };
+
+  function asmTitle(asm) {
+    var first = (asm.split(/\r?\n/).find(function (l) { return l.trim(); }) || "").trim();
+    return first && first.length <= 90 ? first.replace(/[:.]$/, "") : "Assignment";
+  }
+  // Inline styles only, so the result survives LMS editors that strip <style> blocks.
+  var S = {
+    h1: "font-family:Arial,sans-serif;font-size:22px;color:#1d4e89;margin:0 0 4px;",
+    tag: "font-family:Arial,sans-serif;font-size:13px;color:#5a626b;margin:0 0 16px;",
+    h2: "font-family:Arial,sans-serif;font-size:17px;color:#1d4e89;margin:20px 0 6px;",
+    p: "font-family:Arial,sans-serif;font-size:15px;line-height:1.5;margin:0 0 8px;",
+    box: "font-family:Arial,sans-serif;font-size:14px;line-height:1.5;background:#f4f6f9;border-left:4px solid #1d4e89;padding:10px 14px;margin:6px 0 10px;white-space:pre-wrap;",
+    pre: "font-family:Consolas,Menlo,monospace;font-size:13px;line-height:1.45;background:#f1f3f6;border:1px solid #1d4e89;padding:10px 12px;margin:6px 0 10px;white-space:pre-wrap;",
+    table: "border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:14px;margin:6px 0 10px;",
+    th: "border:1px solid #c9ccd1;background:#e4ecf7;padding:6px 8px;text-align:left;",
+    td: "border:1px solid #c9ccd1;padding:6px 8px;vertical-align:top;",
+    note: "font-family:Arial,sans-serif;font-size:14px;line-height:1.5;background:#fff3df;border-left:4px solid #c27a00;padding:10px 14px;margin:6px 0 10px;"
+  };
+  function li(arr) { return arr.map(function (x) { return '<li style="' + S.p + '">' + esc(x) + "</li>"; }).join(""); }
+
+  function buildAssignment(id) {
+    if (!LAST) return;
+    var R = LAST, d = DESIGNS.find(function (x) { return x.id === id; }), st = STUDENT[id];
+    var title = asmTitle(R.asm), outs = R.outs;
+    var h = "";
+    h += '<h1 style="' + S.h1 + '">' + esc(title) + "</h1>";
+    h += '<p style="' + S.tag + '">Redesigned with GenAI in the loop: ' + esc(d.name) + "</p>";
+    h += '<h2 style="' + S.h2 + '">What this assignment shows</h2><p style="' + S.p + '">By completing this assignment, you will show that you can:</p><ol>' + li(outs.map(function (o) { return o.text; })) + "</ol>";
+    h += '<h2 style="' + S.h2 + '">The original task</h2><div style="' + S.box + '">' + esc(R.asm) + "</div>";
+    h += '<h2 style="' + S.h2 + '">How GenAI fits into this assignment</h2><p style="' + S.p + '">' + esc($("expectation").value) + "</p>";
+    h += '<h2 style="' + S.h2 + '">What to do</h2><ol>' + li(st.steps) + "</ol>";
+    if (st.needsTool) {
+      h += '<h2 style="' + S.h2 + '">' + (id === "sequence" ? "Prompts to use" : "Prompt to use") + '</h2><p style="' + S.p + '">Copy the prompt into a GenAI tool your institution permits. Replace anything in [brackets]. Never include personal information about yourself or anyone else.</p>';
+      h += '<div style="' + S.pre + '">' + esc(R.fill(d.prompt)) + "</div>";
+    } else {
+      h += '<p style="' + S.note + '">You do not need a GenAI tool for this assignment. Your instructor provides the GenAI-written material.</p>';
+    }
+    h += '<h2 style="' + S.h2 + '">What to submit</h2><ol>' + li(st.submit) + "</ol>";
+    if (st.needsTool) h += '<p style="' + S.p + '">For each GenAI interaction, keep a short log: the prompt you used, what GenAI returned, what you kept, changed, or rejected, and why.</p>';
+    h += '<h2 style="' + S.h2 + '">How it is graded</h2><p style="' + S.p + '">Your judgment is what is graded, not GenAI\'s output. A GenAI error that you catch and explain counts in your favor.</p>';
+    h += '<table style="' + S.table + '"><tr><th style="' + S.th + '">Criterion</th><th style="' + S.th + 'width:90px;">Weight</th></tr>';
+    st.rubric.forEach(function (r) { h += '<tr><td style="' + S.td + '">' + esc(r[0]) + '</td><td style="' + S.td + '">' + r[1] + "%</td></tr>"; });
+    h += "</table>";
+    if (st.needsTool) h += '<h2 style="' + S.h2 + '">If you cannot or prefer not to use GenAI</h2><p style="' + S.p + '">Tell your instructor. You will receive the GenAI material and complete every other step the same way. Your grade does not depend on having a GenAI tool.</p>';
+    $("asmOut").innerHTML = h;
+
+    // faculty-facing summary of what changed
+    var c = '<div class="grid2"><div><h3 style="margin-top:0">Stays the same</h3><ul class="tight"><li>Your learning outcomes, word for word</li><li>Your original task, shown in full</li><li>Your original criteria, which still count in the rubric where students complete the task</li></ul></div>';
+    c += '<div><h3 style="margin-top:0">What is new</h3><ul class="tight"><li>A defined role for GenAI: ' + esc(JOBS[id][0]) + "</li><li>A thinking move for students: " + esc(JOBS[id][1]) + "</li><li>" + (st.submit.length) + " submissions" + (/(first)/.test(st.submit.join(" ")) ? ", with the student's own work due first" : "") + "</li><li>A rubric weighted toward the student's judgment</li><li>A route for students without GenAI</li></ul></div></div>";
+    $("changeSummary").innerHTML = c;
+    $("designPick").value = id;
+  }
+
+  function assignmentText() {
+    var el = $("asmOut"); if (!el || !el.innerText.trim()) return "";
+    return el.innerText.replace(/\n{3,}/g, "\n\n").trim();
+  }
+  function assignmentDoc(forWord) {
+    var body = $("asmOut").innerHTML;
+    var head = forWord ? '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>' + esc(asmTitle(LAST.asm)) + "</title></head>"
+                       : '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>' + esc(asmTitle(LAST.asm)) + "</title></head>";
+    return head + '<body><div style="max-width:800px;margin:0 auto;padding:16px;">' + body + "</div></body></html>";
+  }
+
+  function planText() {
+    if (!LAST) return "";
+    var R = LAST, L = [];
+    L.push("GENAI-IN-THE-LOOP REDESIGN PLAN"); L.push("Discipline: " + R.ctx.discipline + " | Level: " + R.ctx.level); L.push("");
+    L.push("LEARNING OUTCOMES (unchanged)"); R.outs.forEach(function (o, i) { L.push((i + 1) + ". " + o.text + (o.level ? "  [" + o.level + "]" : o.vague ? "  [vague verb]" : "")); }); L.push("");
+    L.push("ANALYSIS"); L.push("GenAI could do much of the current assessment: " + R.vlevel);
+    L.push("Assessment type: " + (R.products.map(function (p) { return p.label; }).join(", ") || "not detected"));
+    R.sigs.forEach(function (x) { if (x.on) L.push((x.s.up ? "+ " : "- ") + x.s.label); }); L.push("");
+    L.push("TOP DESIGNS");
+    R.scored.slice(0, 3).forEach(function (sc, i) {
+      var d = sc.d; L.push(""); L.push((i + 1) + ". " + d.name.toUpperCase()); L.push(d.short);
+      sc.reasons.forEach(function (r) { L.push("  Fit: " + r); });
+      L.push("How it runs:"); d.steps.forEach(function (s, k) { L.push("  " + (k + 1) + ") " + s); });
+      L.push("Prompt:"); L.push(R.fill(d.prompt).split("\n").map(function (x) { return "    " + x; }).join("\n"));
+      L.push("Students submit: " + d.submit); L.push("Grade: " + d.grade); L.push("No-GenAI route: " + d.nogen); L.push("Watch for: " + d.watch);
+    });
+    L.push(""); L.push("REDESIGNED ASSIGNMENT (student-facing)"); L.push(assignmentText()); L.push("");
+    L.push("THREE-LINE PLAN"); L.push("1. How students will learn the expectation: ______"); L.push("2. First use (course and week): ______"); L.push("3. What I will check in the first submissions: ______");
+    L.push(""); L.push("Note: this plan strengthens the evidence of learning. It does not make the assessment secure or prove who did the work.");
+    return L.join("\n");
+  }
+  function download(name, type, content) {
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([content], { type: type }));
+    a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+    $("exStatus").textContent = "Downloaded " + name + ".";
+  }
+  function planHtml() {
+    var body = esc(planText()).replace(/\n/g, "<br>");
+    return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>GenAI-in-the-Loop Redesign Plan</title>' +
+      '<style>body{font-family:Arial,sans-serif;max-width:820px;margin:32px auto;padding:0 16px;line-height:1.55;color:#1c2024;background:#fff}</style></head><body><div style="font-family:Arial,sans-serif">' + body + "</div></body></html>";
+  }
+
+  // ---------------- file reading (.txt, .docx) ----------------
+  async function readFile(file) {
+    var name = lc(file.name);
+    if (name.endsWith(".docx")) return readDocx(await file.arrayBuffer());
+    if (name.endsWith(".pdf")) throw new Error("PDF files can't be read here. Open the PDF, copy its text, and paste it in.");
+    return await file.text();
+  }
+  async function readDocx(buf) {
+    var dv = new DataView(buf), u8 = new Uint8Array(buf), eocd = -1;
+    for (var i = buf.byteLength - 22; i >= Math.max(0, buf.byteLength - 66000); i--) { if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; } }
+    if (eocd < 0) throw new Error("This doesn't look like a valid .docx file.");
+    var count = dv.getUint16(eocd + 10, true), off = dv.getUint32(eocd + 16, true);
+    var dec = new TextDecoder();
+    for (var n = 0; n < count; n++) {
+      if (dv.getUint32(off, true) !== 0x02014b50) break;
+      var method = dv.getUint16(off + 10, true), csize = dv.getUint32(off + 20, true);
+      var nlen = dv.getUint16(off + 28, true), elen = dv.getUint16(off + 30, true), clen = dv.getUint16(off + 32, true), lho = dv.getUint32(off + 42, true);
+      var fname = dec.decode(u8.subarray(off + 46, off + 46 + nlen));
+      if (fname === "word/document.xml") {
+        var start = lho + 30 + dv.getUint16(lho + 26, true) + dv.getUint16(lho + 28, true);
+        var data = u8.subarray(start, start + csize), xml;
+        if (method === 0) xml = dec.decode(data);
+        else if (method === 8) {
+          if (typeof DecompressionStream === "undefined") throw new Error("This browser can't open .docx files. Copy and paste the text instead.");
+          xml = await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+        } else throw new Error("Unsupported .docx compression. Copy and paste the text instead.");
+        return xml.replace(/<w:tab\/>/g, "\t").replace(/<\/w:p>/g, "\n").replace(/<w:br\/>/g, "\n").replace(/<[^>]+>/g, "")
+          .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&").replace(/\n{3,}/g, "\n\n").trim();
+      }
+      off += 46 + nlen + elen + clen;
+    }
+    throw new Error("Couldn't find the document text in this .docx file.");
+  }
+  function hookFile(inputId, targetId) {
+    $(inputId).addEventListener("change", async function (e) {
+      var f = e.target.files[0]; if (!f) return;
+      try { $(targetId).value = await readFile(f); $("inStatus").style.color = ""; $("inStatus").textContent = "Loaded " + f.name + "."; }
+      catch (err) { $("inStatus").style.color = "var(--hi)"; $("inStatus").textContent = err.message; }
+      e.target.value = "";
+    });
+  }
+  hookFile("fileOut", "outcomes"); hookFile("fileAsm", "assessment");
+
+  // ---------------- samples ----------------
+  var SAMPLES = {
+    stats: { d: "Statistics", lv: "introductory undergraduate",
+      o: "Choose appropriate statistical methods for a research question.\nInterpret statistical results in context.\nEvaluate whether conclusions follow from the data.",
+      a: "Statistics Project: Analyzing a Dataset\nUse the dataset provided in Chapter 9 of the textbook (heights and weights of 50 adults). Compute descriptive statistics for each variable, create appropriate graphs, and conduct a hypothesis test to determine whether mean height differs between men and women. Write a 2-page report summarizing your results and explaining what they mean.\nGrading: correct calculations (40%), appropriate graphs (20%), written interpretation (30%), APA formatting and grammar (10%)." },
+    bib: { d: "English composition", lv: "introductory undergraduate",
+      o: "Locate relevant scholarly sources for a research question.\nEvaluate the credibility and relevance of sources.\nExplain how each source informs the research question.",
+      a: "Annotated Bibliography\nChoose a research question on a topic of your choice. Find five peer-reviewed scholarly sources. For each source, write a 150-word annotation that summarizes the source and explains its relevance to your question. Format citations in APA style.\nGrading: quality of sources (30%), annotations (50%), APA formatting (20%)." },
+    essay: { d: "Business", lv: "intermediate undergraduate",
+      o: "Analyze a company's competitive position using a strategic framework.\nRecommend a strategy supported by evidence.\nDefend the recommendation against likely objections.",
+      a: "Strategy Essay\nWrite a 1,500-word essay analyzing the competitive position of a well-known company using Porter's Five Forces. Recommend one strategy the company should pursue and justify it with evidence. Essays will be graded on analysis, use of evidence, organization, and writing quality." }
+    ,debate: { d: "Political science", lv: "intermediate undergraduate",
+      o: "Construct an evidence-based argument on a public policy question.\nEvaluate the strength of opposing arguments.\nDefend a position in a structured debate.",
+      a: "Policy Debate\nIn teams, debate the resolution: The federal minimum wage should be raised to $17 per hour. Each team submits a written case with five sources, then presents a recorded 5-minute opening statement and a 3-minute rebuttal. Grading: strength of argument (40%), use of evidence (30%), rebuttal (20%), delivery (10%)." },
+    roleplay: { d: "Nursing", lv: "intermediate undergraduate",
+      o: "Apply therapeutic communication techniques with a patient's family.\nPrioritize patient safety information in a conversation.\nReflect on communication choices and their effects.",
+      a: "Role-Play: Family Conference\nWith a partner, role-play a conversation in which a nurse explains a fictional patient's discharge plan to a worried family member. Record the role-play (8 minutes). Then write a 1-page reflection on the communication techniques you used. Grading: communication techniques (40%), accuracy of discharge information (30%), reflection (30%)." }
+  };
+  function loadSample(k) {
+    var s = SAMPLES[k]; $("outcomes").value = s.o; $("assessment").value = s.a; $("discipline").value = s.d; $("level").value = s.lv;
+    $("inStatus").style.color = ""; $("inStatus").textContent = "Sample loaded. Select Analyze and redesign.";
+  }
+  $("sampleSel").addEventListener("change", function (e) { if (e.target.value) { loadSample(e.target.value); } });
+
+  // ---------------- events ----------------
+  $("analyze").onclick = analyze;
+  $("clear").onclick = function () {
+    ["outcomes", "assessment", "discipline"].forEach(function (id) { $(id).value = ""; });
+    $("results").classList.add("hidden"); $("piiWarn").classList.add("hidden"); $("inStatus").textContent = ""; LAST = null;
+  };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-copy]"); if (!b) return;
+    var text = $(b.getAttribute("data-copy")).textContent;
+    var done = function () { var old = b.textContent; b.textContent = "Copied"; setTimeout(function () { b.textContent = old; }, 1600); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    else { fallbackCopy(text); done(); }
+  });
+  function fallbackCopy(text) { var ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.left = "-9999px"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (err) {} ta.remove(); }
+  function useDesign(id) {
+    if (!LAST) return;
+    var d = DESIGNS.find(function (x) { return x.id === id; });
+    $("expectation").value = expectation(d, LAST);
+    buildAssignment(id);
+  }
+  $("designPick").addEventListener("change", function (e) { useDesign(e.target.value); });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-use]"); if (!b) return;
+    useDesign(b.getAttribute("data-use"));
+    $("redesign").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  $("expectation").addEventListener("input", function () { if (LAST) buildAssignment($("designPick").value); });
+  function asmName(ext) { return asmTitle(LAST.asm).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) + "-genai-redesign." + ext; }
+  $("dlWord").onclick = function () { if (!LAST) return; downloadTo("asmStatus", asmName("doc"), "application/msword", assignmentDoc(true)); };
+  $("dlLms").onclick = function () { if (!LAST) return; downloadTo("asmStatus", asmName("html"), "text/html;charset=utf-8", assignmentDoc(false)); };
+  $("copyAsm").onclick = function () {
+    var text = assignmentText(), b = $("copyAsm");
+    var done = function () { $("asmStatus").textContent = "Copied the assignment text."; };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    else { fallbackCopy(text); done(); }
+  };
+  function downloadTo(statusId, name, type, content) {
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([content], { type: type }));
+    a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+    $(statusId).textContent = "Downloaded " + name + ".";
+  }
+  $("dlTxt").onclick = function () { download("genai-in-the-loop-plan.txt", "text/plain;charset=utf-8", planText()); };
+  $("dlHtml").onclick = function () { download("genai-in-the-loop-plan.html", "text/html;charset=utf-8", planHtml()); };
+  $("print").onclick = function () { window.print(); };
+})();
+</script>
+</body>
+</html>
