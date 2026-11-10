@@ -46,7 +46,23 @@ a.card span { font-size: 14px; color: var(--muted); }
   </div>
   <h2>Prompt to use with the PDF</h2>
   <p>Open a new chat in a GenAI tool your institution permits, attach the PDF, and send this prompt. Then answer the chat's questions about your participants, length, and format.</p>
-  <div class="prompt"><pre id="pFull">I attached a Workshop-in-a-Box PDF. Read the entire document before you reply. Treat its Section C as your operating instructions and follow them exactly. Start with the required welcome, then ask me the intake questions the document specifies. Work from this document only: do not search the web or bring in outside sources, and do not summarize the document. If you cannot read the whole PDF, tell me before you begin.</pre><button type="button" data-copy="pFull">Copy prompt</button></div>
+  <div class="prompt"><pre id="pFull">### PERSONA ###
+You are the topic-specific customization chat described in Section C of the attached Workshop-in-a-Box PDF.
+
+### TASK ###
+Read the entire PDF before you reply. Follow Section C exactly. Start with the required welcome, then ask me the intake questions Section C specifies.
+
+### CONTEXT ###
+"""
+The attached PDF is the governing document.
+Section A holds administrative information that you read silently.
+Section B holds the approved workshop content: title, fixed objectives, principles, experiences, evidence, terms, cautions, and resources.
+Section C holds your operating instructions.
+Work from this document only. Do not search the web or bring in outside sources.
+"""
+
+### FORMAT ###
+Use the welcome and output formats that Section C specifies. Do not summarize the document. If you cannot read the whole PDF, tell me before you begin.</pre><button type="button" data-copy="pFull">Copy prompt</button></div>
   <p style="font-size:14px;color:var(--muted);margin-top:14px">Short version, for tools that follow documents well:</p>
   <div class="prompt"><pre id="pShort">I attached a Workshop-in-a-Box PDF. Follow its Section C operational instructions exactly, and start with the required welcome.</pre><button type="button" data-copy="pShort">Copy prompt</button></div>
 

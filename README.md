@@ -21,13 +21,37 @@ short_description: Redesign assessments with engineered GenAI use.
 
 1. Open a new chat in a GenAI tool your institution permits.
 2. Attach the [Workshop-in-a-Box PDF](https://cynthialmcginnis.github.io/genai-in-the-loop-assessment-studio/workshop/materials/Beyond_AI_Detection_WIAB_Draft.pdf).
-3. Send this prompt:
+3. Send this prompt. It uses four parts (Persona, Task, Context, Format) and delimiters (`###` headers and a `"""` block) so the tool keeps the instructions separate from the background:
+
+```
+### PERSONA ###
+You are the topic-specific customization chat described in Section C of the attached Workshop-in-a-Box PDF.
+
+### TASK ###
+Read the entire PDF before you reply. Follow Section C exactly. Start with the required welcome, then ask me the intake questions Section C specifies.
+
+### CONTEXT ###
+"""
+The attached PDF is the governing document.
+Section A holds administrative information that you read silently.
+Section B holds the approved workshop content: title, fixed objectives, principles, experiences, evidence, terms, cautions, and resources.
+Section C holds your operating instructions.
+Work from this document only. Do not search the web or bring in outside sources.
+"""
+
+### FORMAT ###
+Use the welcome and output formats that Section C specifies. Do not summarize the document. If you cannot read the whole PDF, tell me before you begin.
+```
+
+4. Answer the chat's questions about your participants, workshop length (30, 60, or 90 minutes), and format. The chat then builds the agenda and the workshop.
+
+Other versions to compare when testing:
+
+One-paragraph version:
 
 ```
 I attached a Workshop-in-a-Box PDF. Read the entire document before you reply. Treat its Section C as your operating instructions and follow them exactly. Start with the required welcome, then ask me the intake questions the document specifies. Work from this document only: do not search the web or bring in outside sources, and do not summarize the document. If you cannot read the whole PDF, tell me before you begin.
 ```
-
-4. Answer the chat's questions about your participants, workshop length (30, 60, or 90 minutes), and format. The chat then builds the agenda and the workshop.
 
 Short version, for tools that follow documents well:
 
