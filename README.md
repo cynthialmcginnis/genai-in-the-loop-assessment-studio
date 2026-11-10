@@ -10,6 +10,13 @@ short_description: Redesign assessments with engineered GenAI use.
 
 # GenAI-in-the-Loop Assessment Studio
 
+## Live links
+
+- **GenAI-in-the-Loop Assessment Studio (app):** https://cynthialmcginnis.github.io/genai-in-the-loop-assessment-studio/
+- **Workshop landing page:** https://cynthialmcginnis.github.io/genai-in-the-loop-assessment-studio/workshop/
+- **Workshop presentation:** https://cynthialmcginnis.github.io/genai-in-the-loop-assessment-studio/workshop/Beyond_AI_Detection_Workshop.html
+- **Workshop-in-a-Box PDF:** https://cynthialmcginnis.github.io/genai-in-the-loop-assessment-studio/workshop/materials/Beyond_AI_Detection_WIAB_Draft.pdf
+
 Faculty paste or upload (Word, PowerPoint with speaker notes, PDF, or text) any assessment (essay, problem set, lab, presentation, debate, role-play, case study, project, and more) and its learning outcomes. The studio:
 
 - classifies each learning outcome by the thinking its verb asks for, and flags vague verbs;
@@ -27,4 +34,4 @@ The analysis is rule-based. It suggests designs; it does not make any assessment
 
 ## Workshop materials
 
-The [`workshop/`](workshop/) folder holds the Topic 5 Workshop-in-a-Box draft: the interactive workshop presentation, the Workshop-in-a-Box PDF, the Fellow Blueprint, and the facilitator materials. With GitHub Pages on, the landing page is at `/workshop/`.
+The [`workshop/`](workshop/) folder holds the Topic 5 Workshop-in-a-Box draft: the interactive workshop presentation, the Workshop-in-a-Box PDF, the Fellow Blueprint, and the facilitator materials. The landing page is at https://cynthialmcginnis.github.io/genai-in-the-loop-assessment-studio/workshop/
