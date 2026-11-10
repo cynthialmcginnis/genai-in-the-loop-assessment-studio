@@ -24,3 +24,7 @@ Everything runs in the browser. Nothing is uploaded or stored. It works offline 
 Companion tool for the Workshop-in-a-Box "Beyond AI Detection: Redesigning Authentic Assessments for the GenAI Era," by Molly Barra and Cynthia McGinnis, USM Generative AI Pedagogy Fellowship Program, 2026-2027. Draft.
 
 The analysis is rule-based. It suggests designs; it does not make any assessment secure or prove who did the work.
+
+## Workshop materials
+
+The [`workshop/`](workshop/) folder holds the Topic 5 Workshop-in-a-Box draft: the interactive workshop presentation, the Workshop-in-a-Box PDF, the Fellow Blueprint, and the facilitator materials. With GitHub Pages on, the landing page is at `/workshop/`.
