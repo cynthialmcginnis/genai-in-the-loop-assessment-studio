@@ -20,6 +20,10 @@ a.card b { display: block; font-size: 17px; margin-bottom: 4px; }
 a.card span { font-size: 14px; color: var(--muted); }
 .tag { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
 .primary { border-color: rgba(242,165,65,.6) !important; }
+.prompt { background: var(--ink2); border: 1px solid rgba(60,198,180,.45); border-radius: 12px; padding: 14px 16px; }
+.prompt pre { margin: 0 0 10px; white-space: pre-wrap; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 14px; color: var(--paper); }
+.prompt button { background: #1f2840; color: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+.prompt button:hover, .prompt button:focus-visible { border-color: var(--amber); outline: none; }
 .note { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 40px; padding-top: 16px; }
 </style>
 </head>
@@ -40,7 +44,11 @@ a.card span { font-size: 14px; color: var(--muted); }
     <a class="card" href="materials/Beyond_AI_Detection_WIAB_Draft.pdf"><span class="tag">PDF</span><b>Workshop-in-a-Box</b><span>Upload to a GenAI chat with the prompt below. It asks about your participants, length, and format, then builds the agenda and the workshop.</span></a>
     <a class="card" href="materials/Topic5_Fellow_Blueprint.docx"><span class="tag">Word</span><b>Fellow Blueprint</b><span>The content behind the Workshop-in-a-Box, in the program's Blueprint format.</span></a>
   </div>
-  <p style="margin-top:14px;font-size:14px;color:var(--muted)">Prompt to use with the PDF: <i>I attached a Workshop-in-a-Box PDF. Follow its Section C operational instructions exactly, and start with the required welcome.</i></p>
+  <h2>Prompt to use with the PDF</h2>
+  <p>Open a new chat in a GenAI tool your institution permits, attach the PDF, and send this prompt. Then answer the chat's questions about your participants, length, and format.</p>
+  <div class="prompt"><pre id="pFull">I attached a Workshop-in-a-Box PDF. Read the entire document before you reply. Treat its Section C as your operating instructions and follow them exactly. Start with the required welcome, then ask me the intake questions the document specifies. Work from this document only: do not search the web or bring in outside sources, and do not summarize the document. If you cannot read the whole PDF, tell me before you begin.</pre><button type="button" data-copy="pFull">Copy prompt</button></div>
+  <p style="font-size:14px;color:var(--muted);margin-top:14px">Short version, for tools that follow documents well:</p>
+  <div class="prompt"><pre id="pShort">I attached a Workshop-in-a-Box PDF. Follow its Section C operational instructions exactly, and start with the required welcome.</pre><button type="button" data-copy="pShort">Copy prompt</button></div>
 
   <h2>Facilitator materials</h2>
   <div class="grid">
@@ -52,5 +60,14 @@ a.card span { font-size: 14px; color: var(--muted); }
 
   <p class="note">Draft by Molly Barra (Frostburg State University) and Cynthia McGinnis (UMGC Asia), USM Generative AI Pedagogy Fellowship Program, 2026–2027. Pending co-author and program facilitator review. Licensing not yet determined.</p>
 </main>
+<script>
+document.querySelectorAll("[data-copy]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var t = document.getElementById(b.dataset.copy).textContent, done = function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy prompt"; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(done, function () { fallback(t); done(); }); else { fallback(t); done(); }
+  });
+});
+function fallback(t) { var a = document.createElement("textarea"); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch (e) {} a.remove(); }
+</script>
 </body>
 </html>
